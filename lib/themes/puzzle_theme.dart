@@ -34,6 +34,11 @@ class PuzzleTheme {
       fontWeight: FontWeight.w600,
       color: PuzzleColors.blue50,
     ),
+    headline5: GoogleFonts.openSans(
+      fontSize: 24.0,
+      fontWeight: FontWeight.w600,
+      color: Color.fromARGB(255, 195, 0, 255),
+    ),
   );
 
   static TextTheme darkTextTheme = TextTheme(

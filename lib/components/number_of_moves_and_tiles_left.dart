@@ -28,27 +28,26 @@ class NumberOfMovesAndTilesLeft extends StatelessWidget {
       desktop: (context, child) => child!,
       child: () {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: ResponsiveLayout.isDesktop(context)
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
             AnimatedDefaultTextStyle(
               style: !state.darkMode
-                      ? PuzzleTheme.lightTextTheme.headline6!
-                      : PuzzleTheme.darkTextTheme.headline6!
-              ,
-              duration: const Duration(milliseconds: 1000),
+                  ? PuzzleTheme.lightTextTheme.headline6!
+                  : PuzzleTheme.darkTextTheme.headline6!,
+              duration: const Duration(milliseconds: 1500),
               child: Text('${numberOfMoves.toString()} Moves |'),
             ),
-            
             AnimatedDefaultTextStyle(
-              style:  !state.darkMode
-                      ? PuzzleTheme.lightTextTheme.headline6!
-                      : PuzzleTheme.darkTextTheme.headline6!,
-              duration: const Duration(milliseconds: 1000),
+              style: !state.darkMode
+                  ? PuzzleTheme.lightTextTheme.headline6!
+                  : PuzzleTheme.darkTextTheme.headline6!,
+              duration: const Duration(milliseconds: 1500),
               child: Text('${numberOfTilesLeft.toString()} Tiles'),
             ),
-            
           ],
         );
       },

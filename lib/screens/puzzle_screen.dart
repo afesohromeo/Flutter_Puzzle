@@ -32,7 +32,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
     print("scafold");
     return Scaffold(
         body: AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 600),
       decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
       child: LayoutBuilder(builder: (context, constraints) {
         return SingleChildScrollView(
@@ -50,17 +50,14 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   }
 
   Widget buildHeader() {
-    return Container(
+    return AnimatedContainer(
       constraints: const BoxConstraints(maxHeight: 100),
+      duration: const Duration(milliseconds: 600),
       child: ResponsiveLayout(
         mobile: (context, child) => Stack(
           children: [
             Align(
-              child: PuzzleLogo(
-                imageAsset:
-                    Provider.of<PuzzleStateManager>(context, listen: false)
-                        .assetName,
-              ),
+              child: PuzzleLogo(),
             ),
             Align(
               alignment: Alignment.centerRight,
@@ -83,28 +80,14 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              PuzzleLogo(
-                imageAsset:
-                    Provider.of<PuzzleStateManager>(context, listen: false)
-                        .assetName,
-              ),
-              PuzzleMenu()
-            ],
+            children: [const PuzzleLogo(), PuzzleMenu()],
           ),
         ),
         desktop: (context, child) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              PuzzleLogo(
-                imageAsset:
-                    Provider.of<PuzzleStateManager>(context, listen: false)
-                        .assetName,
-              ),
-              PuzzleMenu()
-            ],
+            children: [PuzzleLogo(), PuzzleMenu()],
           ),
         ),
       ),

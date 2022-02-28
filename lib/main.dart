@@ -20,14 +20,24 @@ class PuzzleApp extends StatefulWidget {
 
 class _PuzzleAppState extends State<PuzzleApp> {
   final _appStateManager = PuzzleStateManager();
+  final _timerStateManager = TimerStateManager();
+  @override
+  void initState() {
+    super.initState();
+    _appStateManager.initilizePuzzle();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('heyyyy');
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => _appStateManager,),
+          ChangeNotifierProvider(
+            create: (context) => _appStateManager,
+          ),
+          ChangeNotifierProvider(
+            create: (context) => _timerStateManager,
+          ),
         ],
         child: Consumer<PuzzleStateManager>(
           builder: (context, appStateManager, child) {
@@ -51,43 +61,4 @@ class _PuzzleAppState extends State<PuzzleApp> {
         ));
   }
 
-  Widget myapp() {
-    return Scaffold(
-      body: Row(
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            child: ResponsiveLayout(
-              mobile: (context, child) => Image.asset(
-                Provider.of<PuzzleStateManager>(context, listen: false)
-                    .assetName,
-                height: 24,
-              ),
-              tablet: (context, child) => Image.asset(
-                Provider.of<PuzzleStateManager>(context, listen: false)
-                    .assetName,
-                height: 29,
-              ),
-              desktop: (context, child) => Image.asset(
-                Provider.of<PuzzleStateManager>(context, listen: false)
-                    .assetName,
-                height: 32,
-              ),
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Switch(
-                value: Provider.of<PuzzleStateManager>(context, listen: false)
-                    .darkMode,
-                onChanged: (value) {
-                  print('value $value');
-                  Provider.of<PuzzleStateManager>(context, listen: false)
-                      .darkMode = value;
-                },
-              ))
-        ],
-      ),
-    );
-  }
-}
+ }

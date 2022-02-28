@@ -31,8 +31,8 @@ class PuzzleTitle extends StatelessWidget {
       child: () {
         final textStyle = ResponsiveLayout.isDesktop(context)
             ? !state.darkMode
-                ? PuzzleTheme.lightTextTheme.headline1!.copyWith(fontSize: 40)
-                : PuzzleTheme.darkTextTheme.headline1!.copyWith(fontSize: 40)
+                ? PuzzleTheme.lightTextTheme.headline1!.copyWith(fontSize: 38)
+                : PuzzleTheme.darkTextTheme.headline1!.copyWith(fontSize: 38)
             : ResponsiveLayout.isTablet(context)
                 ? !state.darkMode
                     ? PuzzleTheme.lightTextTheme.headline1!
@@ -53,7 +53,7 @@ class PuzzleTitle extends StatelessWidget {
 
         return AnimatedDefaultTextStyle(
           style: textStyle!,
-          duration: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 1500),
           child: Text(
             'Amazing Puzzle',
             textAlign: textAlign,

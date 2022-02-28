@@ -3,23 +3,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/components/components.dart';
 import 'package:flutter_puzzle/layout/responsive_layout.dart';
-import 'package:flutter_puzzle/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/model.dart';
 
 class PuzzleSimple extends StatelessWidget {
-  PuzzleSimple({Key? key}) : super(key: key);
+  const PuzzleSimple({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: (context, child) => Column(
-        children: [PuzzleMenu(), StartSection()],
+        children: [
+          PuzzleMenu(),
+          StartSection(),
+          BoardSection(),
+        ],
       ),
       tablet: (context, child) => Column(
         children: [StartSection(), BoardSection(), EndSection()],
       ),
       desktop: (context, child) => Row(
-        children: [StartSection(), BoardSection(), EndSection()],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: StartSection()),
+          BoardSection(),
+          Expanded(child: EndSection())
+        ],
       ),
     );
   }
@@ -47,7 +58,80 @@ class BoardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    print('my board');
+    final puzzle = Provider.of<PuzzleStateManager>(context, listen: false)
+        .puzzleState
+        .puzzle;
+    return Column(
+      children: [
+        Gap(ResponsiveLayout.isMobile(context)
+            ? 20
+            : ResponsiveLayout.isTablet(context)
+                ? 10
+                : 30),
+        PuzzleTimer(
+          isRunning: Provider.of<TimerStateManager>(context, listen: false)
+              .stopwatch
+              .isRunning,
+        ),
+        Gap(ResponsiveLayout.isMobile(context)
+            ? 10
+            : ResponsiveLayout.isTablet(context)
+                ? 10
+                : 30),
+        ResponsiveLayout(
+          mobile: (context, child) => SizedBox.square(
+            dimension: 300,
+            child: PuzzleBoard(
+                size: 4,
+                tiles: puzzle.tiles
+                    .map(
+                      (tile) => PuzzleTile(
+                        tile: tile,
+                      ),
+                    )
+                    .toList()),
+          ),
+          tablet: (context, child) => SizedBox.square(
+            dimension: 420,
+            child: PuzzleBoard(
+                size: 4,
+                tiles: puzzle.tiles
+                    .map(
+                      (tile) => PuzzleTile(
+                        tile: tile,
+                      ),
+                    )
+                    .toList()),
+          ),
+          desktop: (context, child) => SizedBox.square(
+            dimension: 470,
+            child: PuzzleBoard(
+                size: 4,
+                tiles: puzzle.tiles.map((tile) 
+                  => PuzzleTile(
+                    tile: tile,
+                  )
+                ).toList()),
+          ),
+        ),
+        Gap(ResponsiveLayout.isMobile(context)
+            ? 20
+            : ResponsiveLayout.isTablet(context)
+                ? 30
+                : 30),
+        ResponsiveLayout(
+          mobile: (context, child) => PuzzleControlButton(),
+          tablet: (context, child) => PuzzleControlButton(),
+          desktop: (context, child) => SizedBox(),
+        ),
+        Gap(ResponsiveLayout.isMobile(context)
+            ? 10
+            : ResponsiveLayout.isTablet(context)
+                ? 30
+                : 30),
+      ],
+    );
   }
 }
 
@@ -78,11 +162,20 @@ class SimpleStartSection extends StatelessWidget {
             ? 5
             : ResponsiveLayout.isTablet(context)
                 ? 10
-                : 20),
+                : 30),
         NumberOfMovesAndTilesLeft(
           numberOfMoves: 2,
           numberOfTilesLeft: 15,
         ),
+        Gap(ResponsiveLayout.isMobile(context)
+            ? 5
+            : ResponsiveLayout.isTablet(context)
+                ? 10
+                : 30),
+        ResponsiveLayout(
+            mobile: (context, child) => const SizedBox(),
+            tablet: (context, child) => const SizedBox(),
+            desktop: (context, child) => PuzzleControlButton())
       ],
     );
   }

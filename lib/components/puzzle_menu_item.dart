@@ -20,9 +20,7 @@ class PuzzleMenuItem extends StatelessWidget {
     final currentMenuIndex = state.currentMenuIndex;
     final isCurrentMenu = menuIndex == currentMenuIndex;
 
-    print('current $isCurrentMenu');
-    print(
-        'menuitem $menuItem == currentMenu ${state.menuItems[currentMenuIndex]}');
+    
     return ResponsiveLayout(
       mobile: (_, child) => Column(
         children: [
@@ -50,10 +48,7 @@ class PuzzleMenuItem extends StatelessWidget {
       child: () {
         final leftPadding =
             menuIndex > 0 && !ResponsiveLayout.isMobile(context) ? 40.0 : 0.0;
-        print('menuindex $menuIndex');
-
-        print('left padding $leftPadding');
-
+       
         return Padding(
           padding: EdgeInsets.only(left: leftPadding),
           child: TextButton(
@@ -63,12 +58,11 @@ class PuzzleMenuItem extends StatelessWidget {
               overlayColor: MaterialStateProperty.all(Colors.transparent),
             ),
             onPressed: () {
-              print('item $menuItem');
               Provider.of<PuzzleStateManager>(context, listen: false)
                   .currentMenuIndex = menuIndex;
             },
             child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 1500),
               style: isCurrentMenu
                   ? !state.darkMode
                       ? PuzzleTheme.lightTextTheme.headline3!
