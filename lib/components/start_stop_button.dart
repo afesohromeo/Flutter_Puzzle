@@ -13,24 +13,38 @@ class StartStopButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final puzzleState = Provider.of<PuzzleStateManager>(context, listen: false);
     final timerState = Provider.of<TimerStateManager>(context, listen: false);
-    final buttonText = !timerState.timerStarted ? 'Start' : 'Reset';
+    final buttonText = timerState.gettingReady
+        ? 'Get Ready'
+        : !timerState.timerStarted
+            ? 'Start'
+            : 'Reset';
     return PuzzleButton(
       isDisabled: false,
       textColor: PuzzleColors.white,
       backgroundColor:
           puzzleState.darkMode ? PuzzleColors.green50 : PuzzleColors.blue50,
       onPressed: () {
-        timerState.stopwatch.isRunning ? puzzleState.resetPuzzle() : null;
-        // Timer(
-        //   const Duration(milliseconds: 3),
-        //   () {
-        //     Timer.periodic(const Duration(seconds: 1), (timer) {
-        //       puzzleState.resetPuzzle();
-        //     });
-        //   },
-        // );
+        timerState.stopwatch.isRunning
+            ? () {
+                puzzleState.resetPuzzle();
+                timerState.handleStartStop();
+              }()
+            : () {
+                timerState.gettingReady = true;
+                Timer.periodic(const Duration(seconds: 1), (timer) {
+                  puzzleState.resetPuzzle();
+                  timer.tick == 3
+                      ? () {
+                          timerState.gettingReady = false;
+                          timer.cancel();
+                          timerState.handleStartStop();
+                        }()
+                      : null;
+                });
+                // !timerState.gettingReady ? timerState.handleStartStop() : null;
+              }();
 
-        timerState.handleStartStop();
+        // puzzleState.rebuild();
       },
       child: Text(buttonText),
     );

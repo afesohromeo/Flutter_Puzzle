@@ -52,6 +52,8 @@ class PuzzleState {
     int? numberOfMoves,
     Tile? lastTappedTile,
   }) {
+    // PuzzleState newState;
+    // newState =
     return PuzzleState(
       puzzle: puzzle ?? this.puzzle,
       puzzleStatus: puzzleStatus ?? this.puzzleStatus,
@@ -60,5 +62,9 @@ class PuzzleState {
       numberOfMoves: numberOfMoves ?? this.numberOfMoves,
       lastTappedTile: lastTappedTile ?? this.lastTappedTile,
     );
+    // for (Tile t in newState.puzzle.tiles) {
+    //   print('update ### ${t.value}');
+    // }
+    // return newState;
   }
 }

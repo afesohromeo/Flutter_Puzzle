@@ -20,7 +20,9 @@ class NumberTileBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print('Building tile');
     final state = Provider.of<PuzzleStateManager>(context, listen: false);
+    final timerState = Provider.of<TimerStateManager>(context, listen: false);
     final buttonStyle = !darkMode
         ? PuzzleTheme.lightTextTheme.headline6!
             .copyWith(fontSize: ResponsiveLayout.isMobile(context) ? 25 : 40)
@@ -40,10 +42,14 @@ class NumberTileBuilder extends StatelessWidget {
             Radius.circular(12),
           ),
         ),
+      ).copyWith(
+        foregroundColor: MaterialStateProperty.all(PuzzleColors.white),
       ),
-      onPressed: () {
-        state.onTileTapped(tile);
-      },
+      onPressed: timerState.timerStarted
+          ? () {
+              state.onTileTapped(tile);
+            }
+          : null,
       child: Text(
         tile.value.toString(),
       ),

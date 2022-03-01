@@ -12,6 +12,7 @@ import 'package:flutter_puzzle/components/components.dart';
 
 import 'custom/puzzle_custom.dart';
 import 'simple/puzzle_simple.dart';
+import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 
 class PuzzleScreen extends StatefulWidget {
   const PuzzleScreen({Key? key}) : super(key: key);
@@ -95,10 +96,15 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   }
 
   Widget buildBody() {
-    return IndexedStack(
-      index: Provider.of<PuzzleStateManager>(context, listen: false)
-          .currentMenuIndex,
-      children: [PuzzleSimple(), PuzzleCustom()],
+    final index = Provider.of<PuzzleStateManager>(context, listen: false)
+        .currentMenuIndex;
+    print('current menu index $index');
+    return LazyLoadIndexedStack(
+      index: index,
+      children: [
+        PuzzleSimple(),
+        PuzzleCustom(),
+      ],
     );
   }
 }

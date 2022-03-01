@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/components/components.dart';
+import 'package:flutter_puzzle/models/model.dart';
+import 'package:provider/provider.dart';
 
 import '../themes/theme.dart';
 
@@ -40,7 +42,11 @@ class PuzzleButton extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all(backgroundColor),
           foregroundColor: MaterialStateProperty.all(textColor),
         ),
-        onPressed: isDisabled! ? null :  onPressed,
+        onPressed: isDisabled! &&
+                (Provider.of<TimerStateManager>(context, listen: false)
+                    .gettingReady)
+            ? null
+            : onPressed,
         child: child,
       ),
     );

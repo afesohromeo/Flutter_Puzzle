@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/models/model.dart';
+import 'package:provider/provider.dart';
 
 class TimerStateManager extends ChangeNotifier {
   bool? _timerStarted = false;
   bool? _shufflePuzzle = true;
-  bool? _timerPaused = false;
+  bool? _gettingReady = false;
   int? secondsElapsed = 0;
   final Stopwatch _stopwatch = Stopwatch();
   late final Ticker? _ticker;
@@ -14,7 +16,7 @@ class TimerStateManager extends ChangeNotifier {
   StreamSubscription<int>? _tickerSubscription;
 
   bool get timerStarted => _timerStarted!;
-  bool get timerPaused => _timerPaused!;
+  bool get gettingReady => _gettingReady!;
   bool get shufflePuzzle => _shufflePuzzle!;
   Stopwatch get stopwatch => _stopwatch;
 
@@ -28,8 +30,8 @@ class TimerStateManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  set timerPaused(bool timerPaused) {
-    _timerPaused = timerPaused;
+  set gettingReady(bool gettingReady) {
+    _gettingReady = gettingReady;
     notifyListeners();
   }
 
@@ -45,11 +47,12 @@ class TimerStateManager extends ChangeNotifier {
       timerStarted = !_stopwatch.isRunning;
       _stopwatch.stop();
       _stopwatch.reset();
-      
+
+      // PuzzleStateManager().rebuild();
 
       notifyListeners();
     } else {
-
+      
       _stopwatch.start();
       timerStarted = _stopwatch.isRunning;
 
@@ -60,6 +63,7 @@ class TimerStateManager extends ChangeNotifier {
       //   }
       //   notifyListeners();
       // });
+      // PuzzleStateManager().rebuild();
       notifyListeners();
     }
   }

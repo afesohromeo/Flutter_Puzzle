@@ -32,7 +32,7 @@ import 'model.dart';
 /// {@template puzzle}
 /// Model for a puzzle.
 /// {@endtemplate}
-class Puzzle{
+class Puzzle {
   /// {@macro puzzle}
   const Puzzle({required this.tiles});
 
@@ -168,6 +168,7 @@ class Puzzle{
     final deltaY = whitespaceTile.currentPosition.y - tile.currentPosition.y;
 
     if ((deltaX.abs() + deltaY.abs()) > 1) {
+      print('Hereee');
       final shiftPointX = tile.currentPosition.x + deltaX.sign;
       final shiftPointY = tile.currentPosition.y + deltaY.sign;
       final tileToSwapWith = tiles.singleWhere(
@@ -178,6 +179,7 @@ class Puzzle{
       tilesToSwap.add(tile);
       return moveTiles(tileToSwapWith, tilesToSwap);
     } else {
+      print("heree instead");
       tilesToSwap.add(tile);
       return _swapTiles(tilesToSwap);
     }
@@ -212,6 +214,4 @@ class Puzzle{
       });
     return Puzzle(tiles: sortedTiles);
   }
-
-  
 }

@@ -108,11 +108,11 @@ class BoardSection extends StatelessWidget {
             dimension: 470,
             child: PuzzleBoard(
                 size: 4,
-                tiles: puzzle.tiles.map((tile) 
-                  => PuzzleTile(
-                    tile: tile,
-                  )
-                ).toList()),
+                tiles: puzzle.tiles
+                    .map((tile) => PuzzleTile(
+                          tile: tile,
+                        ))
+                    .toList()),
           ),
         ),
         Gap(ResponsiveLayout.isMobile(context)
@@ -164,8 +164,13 @@ class SimpleStartSection extends StatelessWidget {
                 ? 10
                 : 30),
         NumberOfMovesAndTilesLeft(
-          numberOfMoves: 2,
-          numberOfTilesLeft: 15,
+          numberOfMoves: Provider.of<PuzzleStateManager>(context, listen: false)
+              .puzzleState
+              .numberOfMoves,
+          numberOfTilesLeft:
+              Provider.of<PuzzleStateManager>(context, listen: false)
+                  .puzzleState
+                  .numberOfTilesLeft,
         ),
         Gap(ResponsiveLayout.isMobile(context)
             ? 5

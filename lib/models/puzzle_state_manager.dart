@@ -9,9 +9,9 @@ class PuzzleStateManager extends ChangeNotifier {
   bool? _darkMode = false;
   final List _menuItems = ['Simple', 'Custom'];
   int? _currentMenuIndex = 0;
-  PuzzleState _puzzleState = const PuzzleState();
+  PuzzleState _puzzleState = PuzzleState();
   final int? _size = 4;
-  final Random? random = Random(2);
+  final Random? random = Random();
 
   bool get darkMode => _darkMode!;
 
@@ -35,6 +35,10 @@ class PuzzleStateManager extends ChangeNotifier {
       : 'assets/images/logo_flutter_color.png';
 
   PuzzleState get puzzleState => _puzzleState;
+
+  void rebuild() {
+    notifyListeners();
+  }
 
   void initilizePuzzle() {
     final timerSate = TimerStateManager();
@@ -129,16 +133,21 @@ class PuzzleStateManager extends ChangeNotifier {
   }
 
   void onTileTapped(Tile tile) {
-    print('yes tapped ${tile.value}');
+    print('yes tapped ${tile.value}, ${tile.currentPosition}');
+    for (Tile t in _puzzleState.puzzle.tiles) {
+      print('update ## ${t.value}');
+    }
     if (_puzzleState.puzzleStatus == PuzzleStatus.incomplete) {
       print('incomplete ${_puzzleState.puzzleStatus}');
       if (_puzzleState.puzzle.isTileMovable(tile)) {
         print('is movable tile ${_puzzleState.puzzle.isTileMovable(tile)}');
         final mutablePuzzle = Puzzle(tiles: [..._puzzleState.puzzle.tiles]);
         final puzzle = mutablePuzzle.moveTiles(tile, []);
+        
+       
         if (puzzle.isComplete()) {
           print('is complete ${puzzle.isComplete()}');
-          _puzzleState.copyWith(
+          _puzzleState = _puzzleState.copyWith(
               puzzle: puzzle.sort(),
               puzzleStatus: PuzzleStatus.complete,
               tileMovementStatus: TileMovementStatus.moved,
@@ -148,13 +157,20 @@ class PuzzleStateManager extends ChangeNotifier {
           notifyListeners();
         } else {
           print('is not complete');
-          _puzzleState.copyWith(
+          _puzzleState = _puzzleState.copyWith(
             puzzle: puzzle.sort(),
             tileMovementStatus: TileMovementStatus.moved,
             numberOfCorrectTiles: puzzle.getNumberOfCorrectTiles(),
             numberOfMoves: _puzzleState.numberOfMoves + 1,
             lastTappedTile: tile,
           );
+          print(puzzle.sort() == null);
+          for (Tile t in puzzle.sort().tiles) {
+            print('update ${t.value}');
+          }
+          for (Tile t in _puzzleState.puzzle.tiles) {
+            print('update # ${t.value}');
+          }
           notifyListeners();
         }
       } else {

@@ -8,7 +8,7 @@ class PuzzleBoard extends StatelessWidget {
   final List<Widget> tiles;
 
   @override
-  Widget build(BuildContext context) {  print('my puzzle grid board');
+  Widget build(BuildContext context) {  print('my puzzle grid board ');
 
     return GridView.count(
         padding: EdgeInsets.zero,
