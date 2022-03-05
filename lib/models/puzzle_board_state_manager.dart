@@ -5,35 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/layout/responsive_layout.dart';
 import 'package:flutter_puzzle/models/model.dart';
 import 'package:flutter_puzzle/models/puzzle_state.dart';
+import 'package:provider/provider.dart';
 
-class PuzzleStateManager extends ChangeNotifier {
-  bool? _darkMode = false;
-  final List _menuItems = ['Simple', 'Custom'];
-  int? _currentMenuIndex = 0;
+class PuzzleBoardStateManager extends ChangeNotifier {
   PuzzleState _puzzleState = PuzzleState();
   final int? _size = 4;
   final Random? random = Random();
-
-  bool get darkMode => _darkMode!;
-
-  set darkMode(bool darkMode) {
-    print('mode $darkMode');
-    _darkMode = darkMode;
-
-    notifyListeners();
-  }
-
-  List get menuItems => _menuItems;
-
-  int get currentMenuIndex => _currentMenuIndex!;
-  set currentMenuIndex(int currentMenuIndex) {
-    _currentMenuIndex = currentMenuIndex;
-    notifyListeners();
-  }
-
-  String get assetName => _darkMode!
-      ? 'assets/images/logo_flutter_white.png'
-      : 'assets/images/logo_flutter_color.png';
 
   PuzzleState get puzzleState => _puzzleState;
 
@@ -50,15 +27,14 @@ class PuzzleStateManager extends ChangeNotifier {
     );
   }
 
-  void resetPuzzle() {
+  void resetPuzzle(bool rebuild) {
     // final timerSate = TimerStateManager();
     final puzzle = _generatePuzzle(_size!);
     _puzzleState = PuzzleState(
       puzzle: puzzle.sort(),
       numberOfCorrectTiles: puzzle.getNumberOfCorrectTiles(),
     );
-
-    notifyListeners();
+    rebuild ? notifyListeners() : null;
   }
 
   Puzzle _generatePuzzle(int size, {bool shuffle = true}) {
@@ -186,5 +162,22 @@ class PuzzleStateManager extends ChangeNotifier {
           tileMovementStatus: TileMovementStatus.cannotBeMoved);
       // notifyListeners();
     }
+  }
+
+  Future<void> getReady(TimerStateManager timerState) async {
+    Timer.periodic(const Duration(milliseconds: 1000), (Timer timer) {
+      print('tick ${timer.tick}, ${timer.tick == 3}');
+
+      timer.tick == 4
+          ? () {
+              // timerState.gettingReady = false;
+
+              timerState.handleStartStop();
+              notifyListeners();
+
+              timer.cancel();
+            }()
+          : resetPuzzle(true);
+    });
   }
 }

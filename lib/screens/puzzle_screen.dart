@@ -22,12 +22,6 @@ class PuzzleScreen extends StatefulWidget {
 }
 
 class _PuzzleScreenState extends State<PuzzleScreen> {
-  // static List<Widget> pages = <Widget>[
-  //    puzzleSimple(),
-  //   const puzzleCustom()
-  //   // const GroceryScreen(),
-  // ];
-
   @override
   Widget build(BuildContext context) {
     print("scafold");

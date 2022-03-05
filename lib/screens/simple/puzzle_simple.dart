@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/components/components.dart';
@@ -80,40 +80,26 @@ class BoardSection extends StatelessWidget {
                 ? 10
                 : 30),
         ResponsiveLayout(
-          mobile: (context, child) => SizedBox.square(
-            dimension: 300,
-            child: PuzzleBoard(
-                size: 4,
-                tiles: puzzle.tiles
-                    .map(
-                      (tile) => PuzzleTile(
-                        tile: tile,
-                      ),
-                    )
-                    .toList()),
-          ),
+          mobile: (context, child) =>
+              SizedBox.square(dimension: 300, child: child),
           tablet: (context, child) => SizedBox.square(
             dimension: 420,
-            child: PuzzleBoard(
-                size: 4,
-                tiles: puzzle.tiles
-                    .map(
-                      (tile) => PuzzleTile(
-                        tile: tile,
-                      ),
-                    )
-                    .toList()),
+            child: child,
           ),
           desktop: (context, child) => SizedBox.square(
             dimension: 470,
-            child: PuzzleBoard(
+            child: child,
+          ),
+          child: () => Consumer<PuzzleBoardStateManager>(
+              builder: (context, board, child) {
+            return PuzzleBoard(
                 size: 4,
-                tiles: puzzle.tiles
+                tiles: board.puzzleState.puzzle.tiles
                     .map((tile) => PuzzleTile(
                           tile: tile,
                         ))
-                    .toList()),
-          ),
+                    .toList());
+          }),
         ),
         Gap(ResponsiveLayout.isMobile(context)
             ? 20
@@ -163,15 +149,18 @@ class SimpleStartSection extends StatelessWidget {
             : ResponsiveLayout.isTablet(context)
                 ? 10
                 : 30),
-        NumberOfMovesAndTilesLeft(
-          numberOfMoves: Provider.of<PuzzleStateManager>(context, listen: false)
-              .puzzleState
-              .numberOfMoves,
-          numberOfTilesLeft:
-              Provider.of<PuzzleStateManager>(context, listen: false)
-                  .puzzleState
-                  .numberOfTilesLeft,
-        ),
+        Consumer<PuzzleBoardStateManager>(builder: (context, board, child) {
+          return NumberOfMovesAndTilesLeft(
+            numberOfMoves:
+                Provider.of<PuzzleBoardStateManager>(context, listen: false)
+                    .puzzleState
+                    .numberOfMoves,
+            numberOfTilesLeft:
+                Provider.of<PuzzleBoardStateManager>(context, listen: false)
+                    .puzzleState
+                    .numberOfTilesLeft,
+          );
+        }),
         Gap(ResponsiveLayout.isMobile(context)
             ? 5
             : ResponsiveLayout.isTablet(context)

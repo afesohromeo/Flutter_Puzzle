@@ -15,7 +15,7 @@ class PuzzleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('puzzle tiles building ${tile.value}');
+    // print('puzzle tiles building ${tile.value}');
     final state = Provider.of<PuzzleStateManager>(context, listen: false);
 
     return tile.isWhitespace
@@ -25,6 +25,6 @@ class PuzzleTile extends StatelessWidget {
                 tile: tile,
                 darkMode: state.darkMode,
               )
-            : ImageTileBuider();
+            : ImageTileBuider( tile: tile,);
   }
 }

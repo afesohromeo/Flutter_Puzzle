@@ -21,15 +21,15 @@ class PuzzleApp extends StatefulWidget {
 class _PuzzleAppState extends State<PuzzleApp> {
   final _appStateManager = PuzzleStateManager();
   final _timerStateManager = TimerStateManager();
+  final _puzzleBoard = PuzzleBoardStateManager();
   @override
   void initState() {
     super.initState();
-    _appStateManager.initilizePuzzle();
+    _puzzleBoard.initilizePuzzle();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -37,6 +37,9 @@ class _PuzzleAppState extends State<PuzzleApp> {
           ),
           ChangeNotifierProvider(
             create: (context) => _timerStateManager,
+          ),
+           ChangeNotifierProvider(
+            create: (context) => _puzzleBoard,
           ),
         ],
         child: Consumer<PuzzleStateManager>(
@@ -60,5 +63,4 @@ class _PuzzleAppState extends State<PuzzleApp> {
           child: const PuzzleScreen(),
         ));
   }
-
- }
+}

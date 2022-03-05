@@ -27,11 +27,14 @@ class PuzzleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
       width: 145,
       height: 44,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20), color: backgroundColor),
       child: AnimatedTextButton(
-        duration: const Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 1000),
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
           textStyle: PuzzleTheme.darkTextTheme.headline2!,
@@ -39,10 +42,10 @@ class PuzzleButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ).copyWith(
-          backgroundColor: MaterialStateProperty.all(backgroundColor),
+          // backgroundColor: MaterialStateProperty.all(backgroundColor),
           foregroundColor: MaterialStateProperty.all(textColor),
         ),
-        onPressed: isDisabled! &&
+        onPressed: isDisabled! ||
                 (Provider.of<TimerStateManager>(context, listen: false)
                     .gettingReady)
             ? null

@@ -43,32 +43,56 @@ class TimerStateManager extends ChangeNotifier {
   }
 
   void handleStartStop() {
+    print('handleing start stop');
+
     if (_stopwatch.isRunning) {
+      print('stopinng');
       timerStarted = !_stopwatch.isRunning;
       _stopwatch.stop();
       _stopwatch.reset();
 
-      // PuzzleStateManager().rebuild();
-
       notifyListeners();
     } else {
-      
+      print('starting');
+
+      _gettingReady = _stopwatch.isRunning;
+
       _stopwatch.start();
       timerStarted = _stopwatch.isRunning;
 
-      // Timer.periodic(const Duration(seconds: 1), (timer) {
-      //   print(_stopwatch.elapsed.inSeconds);
-      //   if (!_stopwatch.isRunning) {
-      //     timer.cancel();
-      //   }
-      //   notifyListeners();
-      // });
-      // PuzzleStateManager().rebuild();
       notifyListeners();
     }
   }
 
+  void stopTimer() {
+    timerStarted = !_stopwatch.isRunning;
+
+    _stopwatch.stop();
+    _stopwatch.reset();
+  }
+
   void rebuild() {
+    notifyListeners();
+  }
+
+  void getReady() {
+    gettingReady = true;
+    bool? done;
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      print('tick ${timer.tick}, ${timer.tick == 3}');
+
+      timer.tick == 4 || timer.tick > 5
+          ? () {
+              gettingReady = false;
+              timer.cancel();
+
+              notifyListeners();
+            }()
+          : () {
+              null;
+            }();
+    });
+
     notifyListeners();
   }
 

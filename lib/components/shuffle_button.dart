@@ -13,6 +13,9 @@ class ShuffleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final puzzleState = Provider.of<PuzzleStateManager>(context, listen: false);
+
+    final puzzleBoardState =
+        Provider.of<PuzzleBoardStateManager>(context, listen: false);
     final isRunning = Provider.of<TimerStateManager>(context, listen: false)
         .stopwatch
         .isRunning;
@@ -20,19 +23,25 @@ class ShuffleButton extends StatelessWidget {
     return PuzzleButton(
       isDisabled: isRunning,
       textColor: puzzleState.darkMode
-          ? isRunning
+          ? isRunning ||
+                  (Provider.of<TimerStateManager>(context, listen: false)
+                      .gettingReady)
               ? PuzzleColors.white.withOpacity(0.5)
               : PuzzleColors.white
           : PuzzleColors.white,
       backgroundColor: puzzleState.darkMode
-          ? isRunning
+          ? isRunning ||
+                  (Provider.of<TimerStateManager>(context, listen: false)
+                      .gettingReady)
               ? PuzzleColors.green50
               : PuzzleColors.green50
-          : isRunning
+          : isRunning ||
+                  (Provider.of<TimerStateManager>(context, listen: false)
+                      .gettingReady)
               ? PuzzleColors.blue50.withOpacity(0.5)
               : PuzzleColors.blue50,
       onPressed: () {
-        isRunning ? null : puzzleState.resetPuzzle();
+        isRunning ? null : puzzleBoardState.resetPuzzle(true);
       },
       child: const Text('Shuffle'),
     );

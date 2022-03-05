@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_puzzle/components/components.dart';
 import 'package:flutter_puzzle/layout/responsive_layout.dart';
 import 'package:flutter_puzzle/themes/colors.dart';
 import 'package:flutter_puzzle/themes/theme.dart';
@@ -16,11 +17,13 @@ class PuzzleMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<PuzzleStateManager>(context, listen: false);
-    final currentMenuIndex = state.currentMenuIndex;
+    final puzzleState = Provider.of<PuzzleStateManager>(context, listen: false);
+
+    final timerState = Provider.of<TimerStateManager>(context, listen: false);
+
+    final currentMenuIndex = puzzleState.currentMenuIndex;
     final isCurrentMenu = menuIndex == currentMenuIndex;
 
-    
     return ResponsiveLayout(
       mobile: (_, child) => Column(
         children: [
@@ -32,7 +35,7 @@ class PuzzleMenuItem extends StatelessWidget {
                     border: Border(
                       bottom: BorderSide(
                         width: 2,
-                        color: !state.darkMode
+                        color: !puzzleState.darkMode
                             ? PuzzleColors.bluePrimary
                             : PuzzleColors.white,
                       ),
@@ -48,7 +51,7 @@ class PuzzleMenuItem extends StatelessWidget {
       child: () {
         final leftPadding =
             menuIndex > 0 && !ResponsiveLayout.isMobile(context) ? 40.0 : 0.0;
-       
+
         return Padding(
           padding: EdgeInsets.only(left: leftPadding),
           child: TextButton(
@@ -58,16 +61,24 @@ class PuzzleMenuItem extends StatelessWidget {
               overlayColor: MaterialStateProperty.all(Colors.transparent),
             ),
             onPressed: () {
-              Provider.of<PuzzleStateManager>(context, listen: false)
-                  .currentMenuIndex = menuIndex;
+              isCurrentMenu
+                  ? null
+                  : () {
+                      timerState.timerStarted ? timerState.stopTimer() : null;
+                      Provider.of<PuzzleBoardStateManager>(context,
+                              listen: false)
+                          .resetPuzzle(false);
+
+                      puzzleState.currentMenuIndex = menuIndex;
+                    }();
             },
             child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 1500),
+              duration: const Duration(milliseconds: 1000),
               style: isCurrentMenu
-                  ? !state.darkMode
+                  ? !puzzleState.darkMode
                       ? PuzzleTheme.lightTextTheme.headline3!
                       : PuzzleTheme.darkTextTheme.headline3!
-                  : !state.darkMode
+                  : !puzzleState.darkMode
                       ? PuzzleTheme.lightTextTheme.headline4!
                       : PuzzleTheme.darkTextTheme.headline4!,
               child: Text(menuItem!),

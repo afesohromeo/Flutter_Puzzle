@@ -38,14 +38,14 @@ class NumberOfMovesAndTilesLeft extends StatelessWidget {
               style: !state.darkMode
                   ? PuzzleTheme.lightTextTheme.headline6!
                   : PuzzleTheme.darkTextTheme.headline6!,
-              duration: const Duration(milliseconds: 1500),
+              duration: const Duration(milliseconds: 1000),
               child: Text('${numberOfMoves.toString()} Moves |'),
             ),
             AnimatedDefaultTextStyle(
               style: !state.darkMode
                   ? PuzzleTheme.lightTextTheme.headline6!
                   : PuzzleTheme.darkTextTheme.headline6!,
-              duration: const Duration(milliseconds: 1500),
+              duration: const Duration(milliseconds: 1000),
               child: Text('${numberOfTilesLeft.toString()} Tiles'),
             ),
           ],

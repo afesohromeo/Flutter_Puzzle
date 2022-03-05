@@ -76,42 +76,26 @@ class BoardSection extends StatelessWidget {
                 ? 10
                 : 30),
         ResponsiveLayout(
-          mobile: (context, child) => SizedBox.square(
-            dimension: 300,
-            child: PuzzleBoard(
-                size: 4,
-                tiles: puzzle.tiles
-                    .map(
-                      (tile) => PuzzleTile(
-                        tile: tile,
-                      ),
-                    )
-                    .toList()),
-          ),
+          mobile: (context, child) =>
+              SizedBox.square(dimension: 300, child: child),
           tablet: (context, child) => SizedBox.square(
             dimension: 420,
-            child: PuzzleBoard(
-                size: 4,
-                tiles: puzzle.tiles
-                    .map(
-                      (tile) => PuzzleTile(
-                        key: Key('puzzle_tile_${tile.value.toString()}'),
-                        tile: tile,
-                      ),
-                    )
-                    .toList()),
+            child: child,
           ),
           desktop: (context, child) => SizedBox.square(
             dimension: 470,
-            child: PuzzleBoard(
-                size: 4,
-                tiles: puzzle.tiles.map((tile) {
-                  return PuzzleTile(
-                    key: Key('puzzle_tile_${tile.value.toString()}'),
-                    tile: tile,
-                  );
-                }).toList()),
+            child: child,
           ),
+          child: () => Consumer<PuzzleBoardStateManager>(
+              builder: (context, board, child) {
+            return PuzzleBoard(
+                size: 4,
+                tiles: board.puzzleState.puzzle.tiles
+                    .map((tile) => PuzzleTile(
+                          tile: tile,
+                        ))
+                    .toList());
+          }),
         ),
         Gap(ResponsiveLayout.isMobile(context)
             ? 20

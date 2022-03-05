@@ -12,6 +12,9 @@ class StartStopButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final puzzleState = Provider.of<PuzzleStateManager>(context, listen: false);
+
+    final puzzleBoardState =
+        Provider.of<PuzzleBoardStateManager>(context, listen: false);
     final timerState = Provider.of<TimerStateManager>(context, listen: false);
     final buttonText = timerState.gettingReady
         ? 'Get Ready'
@@ -24,24 +27,30 @@ class StartStopButton extends StatelessWidget {
       backgroundColor:
           puzzleState.darkMode ? PuzzleColors.green50 : PuzzleColors.blue50,
       onPressed: () {
-        timerState.stopwatch.isRunning
+        timerState.timerStarted
             ? () {
-                puzzleState.resetPuzzle();
                 timerState.handleStartStop();
+                puzzleBoardState.resetPuzzle(true);
               }()
-            : () {
+            : () async {
                 timerState.gettingReady = true;
-                Timer.periodic(const Duration(seconds: 1), (timer) {
-                  puzzleState.resetPuzzle();
-                  timer.tick == 3
-                      ? () {
-                          timerState.gettingReady = false;
-                          timer.cancel();
-                          timerState.handleStartStop();
-                        }()
-                      : null;
-                });
-                // !timerState.gettingReady ? timerState.handleStartStop() : null;
+
+                // Timer.periodic(const Duration(milliseconds: 1000),
+                //     (Timer timer) {
+                //   print('tick ${timer.tick}, ${timer.tick == 3}');
+
+                //   timer.tick >= 4
+                //       ? () {
+                //           // timerState.gettingReady = false;
+                //           timerState.handleStartStop();
+                //           puzzleBoardState.rebuild();
+
+                //           timer.cancel();
+                //         }()
+                //       : puzzleBoardState.resetPuzzle();
+                // });
+                //
+                await puzzleBoardState.getReady(timerState);
               }();
 
         // puzzleState.rebuild();

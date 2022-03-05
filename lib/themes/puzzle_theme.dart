@@ -20,12 +20,12 @@ class PuzzleTheme {
       color: PuzzleColors.black,
     ),
     headline3: GoogleFonts.openSans(
-      fontSize: 16.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.w700,
       color: PuzzleColors.black,
     ),
     headline4: GoogleFonts.openSans(
-      fontSize: 16.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.w500,
       color: PuzzleColors.grey1,
     ),
@@ -58,12 +58,12 @@ class PuzzleTheme {
       color: PuzzleColors.white,
     ),
     headline3: GoogleFonts.openSans(
-      fontSize: 16.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.w700,
       color: PuzzleColors.white,
     ),
     headline4: GoogleFonts.openSans(
-      fontSize: 16.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.w500,
       color: PuzzleColors.grey2,
     ),

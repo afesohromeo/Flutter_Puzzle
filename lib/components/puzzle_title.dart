@@ -53,7 +53,7 @@ class PuzzleTitle extends StatelessWidget {
 
         return AnimatedDefaultTextStyle(
           style: textStyle!,
-          duration: const Duration(milliseconds: 1500),
+          duration: const Duration(milliseconds: 1000),
           child: Text(
             'Amazing Puzzle',
             textAlign: textAlign,
