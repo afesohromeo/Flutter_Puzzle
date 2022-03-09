@@ -8,9 +8,9 @@ import 'package:flutter_puzzle/themes/puzzle_theme.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
-class PuzzleTimer extends StatefulWidget {
+class PuzzleTimer extends StatelessWidget {
   /// {@macro dashatar_timer}
-  const PuzzleTimer(
+  PuzzleTimer(
       {Key? key,
       this.textStyle,
       this.iconSize,
@@ -35,95 +35,50 @@ class PuzzleTimer extends StatefulWidget {
   final bool isRunning;
 
   @override
-  State<PuzzleTimer> createState() => _PuzzleTimerState();
-}
-
-class _PuzzleTimerState extends State<PuzzleTimer> {
-  Timer? _timer;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _timer!.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final state = Provider.of<PuzzleStateManager>(context, listen: false);
 
-    final timerState = Provider.of<TimerStateManager>(context, listen: false);
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (timerState.stopwatch.isRunning) {
-        setState(() {});
-      } else {
-        setState(() {});
-      }
-    });
+    final currentTextStyle = textStyle ??
+        (ResponsiveLayout.isMobile(context)
+            ? !state.darkMode
+                ? PuzzleTheme.lightTextTheme.headline2
+                : PuzzleTheme.darkTextTheme.headline2
+            : !state.darkMode
+                ? PuzzleTheme.lightTextTheme.headline2!.copyWith(fontSize: 40)
+                : PuzzleTheme.darkTextTheme.headline2!.copyWith(fontSize: 40));
 
-    // Timer.periodic(const Duration(seconds: 1), (timer) {
-    //   print(timerState.stopwatch.elapsed.inSeconds);
-    //   if (!timerState.stopwatch.isRunning) {
-    //     timer.cancel();
-    //   }
-    //   timerState.rebuild();
-    // });
-    return ResponsiveLayout(
-      mobile: (_, child) => child!,
-      tablet: (_, child) => child!,
-      desktop: (_, child) => child!,
-      child: () {
-        final currentTextStyle = widget.textStyle ??
-            (ResponsiveLayout.isMobile(context)
-                ? !state.darkMode
-                    ? PuzzleTheme.lightTextTheme.headline2
-                    : PuzzleTheme.darkTextTheme.headline2
-                : !state.darkMode
-                    ? PuzzleTheme.lightTextTheme.headline2!
-                        .copyWith(fontSize: 40)
-                    : PuzzleTheme.darkTextTheme.headline2!
-                        .copyWith(fontSize: 40));
+    final currentIconSize = iconSize ??
+        (ResponsiveLayout.isMobile(context)
+            ? const Size(28, 28)
+            : const Size(32, 32));
+    final iconColor = state.darkMode ? PuzzleColors.white : PuzzleColors.black;
 
-        final currentIconSize = widget.iconSize ??
-            (ResponsiveLayout.isMobile(context)
-                ? const Size(28, 28)
-                : const Size(32, 32));
-        final iconColor =
-            state.darkMode ? PuzzleColors.white : PuzzleColors.black;
+    return Consumer<TimerStateManager>(builder: (context, timer, child) {
+      final timeElapsed = timer.stopwatch.elapsed;
 
-        final timeElapsed = timerState.stopwatch.elapsed;
-
-        return Row(
-          mainAxisAlignment:
-              widget.mainAxisAlignment ?? MainAxisAlignment.center,
-          children: [
-            AnimatedDefaultTextStyle(
-              style: currentTextStyle!,
-              duration: const Duration(milliseconds: 1500),
-              child: Text(
-                _formatDuration(timeElapsed),
-                key: ValueKey(timerState.secondsElapsed),
-              ),
+      return Row(
+        mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.center,
+        children: [
+          AnimatedDefaultTextStyle(
+            style: currentTextStyle!,
+            duration: const Duration(milliseconds: 1500),
+            child: Text(
+              _formatDuration(timeElapsed),
+              key: ValueKey(timer.secondsElapsed),
             ),
-            Gap(10),
-            AnimatedSwitcher(
-              duration: const Duration(microseconds: 600),
-              child: Icon(
-                Icons.timer_outlined,
-                color: iconColor,
-                size: currentIconSize.width,
-              ),
-            )
-          ],
-        );
-      },
-    );
+          ),
+          Gap(10),
+          AnimatedSwitcher(
+            duration: const Duration(microseconds: 600),
+            child: Icon(
+              Icons.timer_outlined,
+              color: iconColor,
+              size: currentIconSize.width,
+            ),
+          )
+        ],
+      );
+    });
   }
 
   String _formatDuration(Duration duration) {

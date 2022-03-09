@@ -59,9 +59,7 @@ class BoardSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('my board');
-    final puzzle = Provider.of<PuzzleStateManager>(context, listen: false)
-        .puzzleState
-        .puzzle;
+
     return Column(
       children: [
         Gap(ResponsiveLayout.isMobile(context)
@@ -70,10 +68,11 @@ class BoardSection extends StatelessWidget {
                 ? 10
                 : 30),
         PuzzleTimer(
-          isRunning: Provider.of<TimerStateManager>(context, listen: false)
-              .stopwatch
-              .isRunning,
-        ),
+            isRunning: Provider.of<TimerStateManager>(context, listen: false)
+                .stopwatch
+                .isRunning,
+          ),
+        
         Gap(ResponsiveLayout.isMobile(context)
             ? 10
             : ResponsiveLayout.isTablet(context)
@@ -96,8 +95,8 @@ class BoardSection extends StatelessWidget {
                 size: 4,
                 tiles: board.puzzleState.puzzle.tiles
                     .map((tile) => PuzzleTile(
-                          tile: tile,
-                        ))
+                        tile: tile,
+                        image: Image.asset('assets/images/blue.png')))
                     .toList());
           }),
         ),
@@ -126,7 +125,7 @@ class EndSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return SizedBox();
   }
 }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PuzzleBoard extends StatelessWidget {
-  const PuzzleBoard({Key? key, required this.size, required this.tiles})
+  const PuzzleBoard({Key? key, required this.size, required this.tiles,})
       : super(key: key);
   final int size;
   final List<Widget> tiles;

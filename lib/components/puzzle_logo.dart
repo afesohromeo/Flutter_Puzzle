@@ -15,25 +15,36 @@ class PuzzleLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     final assetName =
         Provider.of<PuzzleStateManager>(context, listen: false).assetName;
+    final height = ResponsiveLayout.isMobile(context)
+        ? 25.0
+        : ResponsiveLayout.isTablet(context)
+            ? 30.0
+            : ResponsiveLayout.isDesktop(context)
+                ? 35.0
+                : null;
 
     return AnimatedSwitcher(
         duration: const Duration(milliseconds: 600),
-        child: myAnimatedLogo(assetName));
+        child: myAnimatedLogo(assetName, height!));
   }
 
-  Widget myAnimatedLogo(String assetName) {
+  Widget myAnimatedLogo(String assetName, double height) {
     return ResponsiveLayout(
-      mobile: (context, child) => Image.asset(
+      mobile: (context, child) => child!,
+      tablet: (context, child) => child!,
+      desktop: (context, child) => child!,
+      child: () => Image.asset(
         assetName,
-        height: 25,
-      ),
-      tablet: (context, child) => Image.asset(
-        assetName,
-        height: 30,
-      ),
-      desktop: (context, child) => Image.asset(
-        assetName,
-        height: 35,
+        height: height,
+        frameBuilder: (BuildContext context, Widget child, int? frame,
+            bool wasSynchronouslyLoaded) {
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeOut,
+            child: child,
+          );
+        },
       ),
     );
   }

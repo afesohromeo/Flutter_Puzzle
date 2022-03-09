@@ -16,11 +16,11 @@ class ResponsiveLayout extends StatelessWidget {
       : super(key: key);
 
   static bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < 528;
+      MediaQuery.of(context).size.width <= 530;
 
   static bool isTablet(BuildContext context) =>
       MediaQuery.of(context).size.width < 1235 &&
-      MediaQuery.of(context).size.width >= 530;
+      MediaQuery.of(context).size.width > 530;
 
   static bool isDesktop(BuildContext context) =>
       MediaQuery.of(context).size.width >= 1235;
@@ -33,9 +33,9 @@ class ResponsiveLayout extends StatelessWidget {
       builder: (context, constraints) {
         final Size size = MediaQuery.of(context).size;
 
-        if (size.width <= 528) {
+        if (size.width <= 530) {
           return mobile(context, child?.call());
-        } else if (size.width <= 1235 && size.width > 528) {
+        } else if (size.width < 1235 && size.width > 530) {
           return tablet(context, child?.call());
         } else {
           return desktop(context, child?.call());

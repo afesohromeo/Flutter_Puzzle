@@ -22,10 +22,12 @@ class _PuzzleAppState extends State<PuzzleApp> {
   final _appStateManager = PuzzleStateManager();
   final _timerStateManager = TimerStateManager();
   final _puzzleBoard = PuzzleBoardStateManager();
+  
   @override
   void initState() {
     super.initState();
     _puzzleBoard.initilizePuzzle();
+    // _puzzleBoard.initCustomBoard(defaultAsset);
   }
 
   @override
@@ -38,7 +40,7 @@ class _PuzzleAppState extends State<PuzzleApp> {
           ChangeNotifierProvider(
             create: (context) => _timerStateManager,
           ),
-           ChangeNotifierProvider(
+          ChangeNotifierProvider(
             create: (context) => _puzzleBoard,
           ),
         ],

@@ -24,10 +24,11 @@ class NumberTileBuilder extends StatelessWidget {
     final state = Provider.of<PuzzleBoardStateManager>(context, listen: false);
     final timerState = Provider.of<TimerStateManager>(context, listen: false);
     final buttonStyle = !darkMode
-        ? PuzzleTheme.lightTextTheme.headline6!
-            .copyWith(fontSize: ResponsiveLayout.isMobile(context) ? 25 : 40)
+        ? PuzzleTheme.lightTextTheme.headline6!.copyWith(
+            fontSize: ResponsiveLayout.isMobile(context) ? 25 : 50,
+          )
         : PuzzleTheme.darkTextTheme.headline6!
-            .copyWith(fontSize: ResponsiveLayout.isMobile(context) ? 25 : 40);
+            .copyWith(fontSize: ResponsiveLayout.isMobile(context) ? 25 : 50);
     final bgColor = !darkMode
         ? PuzzleColors.bluePrimary.withOpacity(0.9)
         : PuzzleColors.green50;
@@ -70,7 +71,7 @@ class NumberTileBuilder extends StatelessWidget {
             backgroundColor: bgColor,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(19),
+                Radius.circular(10),
               ),
             ),
           ).copyWith(

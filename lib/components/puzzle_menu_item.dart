@@ -23,6 +23,19 @@ class PuzzleMenuItem extends StatelessWidget {
 
     final currentMenuIndex = puzzleState.currentMenuIndex;
     final isCurrentMenu = menuIndex == currentMenuIndex;
+    final textStyle = isCurrentMenu
+        ? !puzzleState.darkMode
+            ? PuzzleTheme.lightTextTheme.headline3!.copyWith(
+                fontWeight: FontWeight.w700,
+                color: PuzzleColors.blue50,
+              )
+            : PuzzleTheme.darkTextTheme.headline3!.copyWith(
+                color: PuzzleColors.green90,
+              )
+        : !puzzleState.darkMode
+            ? PuzzleTheme.lightTextTheme.headline3!
+            : PuzzleTheme.darkTextTheme.headline3!.copyWith(
+                color: PuzzleColors.white, fontWeight: FontWeight.normal);
 
     return ResponsiveLayout(
       mobile: (_, child) => Column(
@@ -73,14 +86,8 @@ class PuzzleMenuItem extends StatelessWidget {
                     }();
             },
             child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 1000),
-              style: isCurrentMenu
-                  ? !puzzleState.darkMode
-                      ? PuzzleTheme.lightTextTheme.headline3!
-                      : PuzzleTheme.darkTextTheme.headline3!
-                  : !puzzleState.darkMode
-                      ? PuzzleTheme.lightTextTheme.headline4!
-                      : PuzzleTheme.darkTextTheme.headline4!,
+              duration: const Duration(milliseconds: 600),
+              style: textStyle,
               child: Text(menuItem!),
             ),
           ),

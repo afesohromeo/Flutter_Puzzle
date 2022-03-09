@@ -21,7 +21,7 @@ class PuzzleTheme {
     ),
     headline3: GoogleFonts.openSans(
       fontSize: 18.0,
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.w600,
       color: PuzzleColors.black,
     ),
     headline4: GoogleFonts.openSans(

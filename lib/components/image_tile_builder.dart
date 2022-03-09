@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import '../models/model.dart';
 
 class ImageTileBuider extends StatelessWidget {
-  const ImageTileBuider({Key? key, required this.tile}) : super(key: key);
+  const ImageTileBuider({Key? key, required this.tile, required this.image})
+      : super(key: key);
   final Tile tile;
+  final Image image;
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +34,16 @@ class ImageTileBuider extends StatelessWidget {
           dimension: 115,
           child: child,
         ),
-        child: () => IconButton(
-          padding: EdgeInsets.zero,
-          onPressed: timerState.timerStarted
-              ? () {
-                  state.onTileTapped(tile);
-                }
-              : null,
-          icon: Image.asset('assets/images/simple_dash_small.png'
-              // semanticLabel: context.l10n.puzzleTileLabelText(
-              //   tile.value.toString(),
-              //   tile.currentPosition.x.toString(),
-              //   tile.currentPosition.y.toString(),
-              // ),
-              ),
+        child: () => ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: timerState.timerStarted
+                  ? () {
+                      state.onTileTapped(tile);
+                    }
+                  : null,
+              icon: image),
         ),
       ),
     );

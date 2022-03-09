@@ -75,7 +75,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [const PuzzleLogo(), PuzzleMenu()],
+            children: [PuzzleLogo(), PuzzleMenu()],
           ),
         ),
         desktop: (context, child) => Padding(

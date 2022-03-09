@@ -59,6 +59,14 @@ class TimerStateManager extends ChangeNotifier {
 
       _stopwatch.start();
       timerStarted = _stopwatch.isRunning;
+      Timer.periodic(const Duration(seconds: 1), (timer) {
+        print('timer ticking ${timer.tick}');
+        if (_stopwatch.isRunning) {
+          notifyListeners();
+        } else {
+          timer.cancel();
+        }
+      });
 
       notifyListeners();
     }

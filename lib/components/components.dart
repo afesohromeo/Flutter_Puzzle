@@ -16,3 +16,4 @@ export 'whitespace_tile_builder.dart';
 export 'number_tile_builder.dart';
 export 'image_tile_builder.dart';
 export 'puzzle_timer.dart';
+export 'image_container.dart';

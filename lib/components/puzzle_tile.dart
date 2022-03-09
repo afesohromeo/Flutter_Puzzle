@@ -5,13 +5,11 @@ import '../models/model.dart';
 import 'components.dart';
 
 class PuzzleTile extends StatelessWidget {
-  const PuzzleTile({
-    Key? key,
-    required this.tile,
-  }) : super(key: key);
+  const PuzzleTile({Key? key, required this.tile, required this.image}) : super(key: key);
 
   /// The tile to be displayed.
   final Tile tile;
+  final Image image;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +23,6 @@ class PuzzleTile extends StatelessWidget {
                 tile: tile,
                 darkMode: state.darkMode,
               )
-            : ImageTileBuider( tile: tile,);
+            : ImageTileBuider(tile: tile, image: image);
   }
 }
