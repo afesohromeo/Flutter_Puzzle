@@ -228,8 +228,22 @@ class PuzzleBoardStateManager extends ChangeNotifier {
 
     // convert image from image package to Image Widget to display
     for (var img in parts) {
-      _imageList.add(Image.memory(Uint8List.fromList(imglib.encodeJpg(img)),
-          scale: 0.3, fit: BoxFit.contain));
+      _imageList.add(Image.memory(
+        Uint8List.fromList(
+          imglib.encodeJpg(img),
+        ),
+        scale: 0.3,
+        fit: BoxFit.contain,
+        frameBuilder: (BuildContext context, Widget child, int? frame,
+            bool wasSynchronouslyLoaded) {
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeIn,
+            child: child,
+          );
+        },
+      ));
     }
   }
 
