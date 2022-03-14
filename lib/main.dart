@@ -56,7 +56,7 @@ class _PuzzleAppState extends State<PuzzleApp> {
             }
             return MaterialApp(
                 debugShowCheckedModeBanner: false,
-                title: ' Challenge',
+                title: ' Amazing-Puzzle',
                 theme: theme,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
