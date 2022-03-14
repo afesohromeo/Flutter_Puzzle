@@ -176,6 +176,8 @@ class EndSection extends StatelessWidget {
     final puzzleState = Provider.of<PuzzleStateManager>(context, listen: false);
     final floatingButtonColor =
         puzzleState.darkMode ? PuzzleColors.green50 : PuzzleColors.blue50;
+    final timerState = Provider.of<TimerStateManager>(context, listen: false);
+
     return ResponsiveLayout(
       mobile: (_, child) =>
           // height: 300,
@@ -234,6 +236,8 @@ class EndSection extends StatelessWidget {
                       type: FileType.custom,
                       allowMultiple: false,
                       allowedExtensions: ['jpg', 'png']);
+                  timerState.timerStarted ? timerState.stopTimer() : null;
+
                   puzzleBoardState.addImage(img!.files.first.bytes!);
                 },
                 child: Icon(Icons.camera_alt, size: 20),
