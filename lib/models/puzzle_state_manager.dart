@@ -9,7 +9,7 @@ import 'package:flutter_puzzle/models/puzzle_state.dart';
 class PuzzleStateManager extends ChangeNotifier {
   bool? _darkMode = false;
   final List _menuItems = ['Simple', 'Custom'];
-  int? _currentMenuIndex = 1;
+  int? _currentMenuIndex = 0;
 
   bool get darkMode => _darkMode!;
 

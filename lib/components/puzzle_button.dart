@@ -47,7 +47,7 @@ class PuzzleButton extends StatelessWidget {
         ),
         onPressed: isDisabled! ||
                 (Provider.of<TimerStateManager>(context, listen: false)
-                    .gettingReady)
+                    .gettingReady) 
             ? null
             : onPressed,
         child: child,

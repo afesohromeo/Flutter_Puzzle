@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/components/components.dart';
 import 'package:flutter_puzzle/models/model.dart';
+import 'package:flutter_puzzle/models/puzzle_state.dart';
 import 'package:flutter_puzzle/themes/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +20,8 @@ class StartStopButton extends StatelessWidget {
     final buttonText = timerState.gettingReady
         ? 'Get Ready'
         : !timerState.timerStarted
-            ? 'Start'
-            : 'Reset';
+            ? 'Start' 
+            : puzzleBoardState.puzzleState.puzzleStatus == PuzzleStatus.complete ? 'Restart' : 'Reset';
     return PuzzleButton(
       isDisabled: false,
       textColor: PuzzleColors.white,
@@ -30,26 +31,18 @@ class StartStopButton extends StatelessWidget {
         timerState.timerStarted
             ? () {
                 timerState.handleStartStop();
-                puzzleBoardState.resetPuzzle(true);
+                puzzleBoardState.resetPuzzle(true, false);
               }()
             : () async {
                 timerState.gettingReady = true;
 
-                // Timer.periodic(const Duration(milliseconds: 1000),
-                //     (Timer timer) {
-                //   print('tick ${timer.tick}, ${timer.tick == 3}');
-
-                //   timer.tick >= 4
-                //       ? () {
-                //           // timerState.gettingReady = false;
-                //           timerState.handleStartStop();
-                //           puzzleBoardState.rebuild();
-
-                //           timer.cancel();
-                //         }()
-                //       : puzzleBoardState.resetPuzzle();
-                // });
-                //
+                timerState.succesful ?  Timer(
+      const Duration(milliseconds: 2000),
+      ()async {
+         await puzzleBoardState.getReady(timerState);
+       
+      },
+    ):
                 await puzzleBoardState.getReady(timerState);
               }();
 

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/components/components.dart';
 import 'package:flutter_puzzle/layout/responsive_layout.dart';
+import 'package:flutter_puzzle/models/puzzle_state.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
@@ -58,6 +59,8 @@ class BoardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+
     print('my board');
 
     return Column(
@@ -68,11 +71,10 @@ class BoardSection extends StatelessWidget {
                 ? 10
                 : 30),
         PuzzleTimer(
-            isRunning: Provider.of<TimerStateManager>(context, listen: false)
-                .stopwatch
-                .isRunning,
-          ),
-        
+          isRunning: Provider.of<TimerStateManager>(context, listen: false)
+              .stopwatch
+              .isRunning,
+        ),
         Gap(ResponsiveLayout.isMobile(context)
             ? 10
             : ResponsiveLayout.isTablet(context)
@@ -91,13 +93,30 @@ class BoardSection extends StatelessWidget {
           ),
           child: () => Consumer<PuzzleBoardStateManager>(
               builder: (context, board, child) {
-            return PuzzleBoard(
-                size: 4,
-                tiles: board.puzzleState.puzzle.tiles
-                    .map((tile) => PuzzleTile(
-                        tile: tile,
-                        image: Image.asset('assets/images/blue.png')))
-                    .toList());
+            print('puzzle status ${board.puzzleState.puzzleStatus}');
+            print('puzzle size $size');
+            if (board.puzzleState.puzzleStatus == PuzzleStatus.complete) {
+              Provider.of<TimerStateManager>(context, listen: false)
+                  .puzzleCompleted();
+            }
+            return Stack(children: [
+              PuzzleBoard(
+                  size: 4,
+                  tiles: board.puzzleState.puzzle.tiles
+                      .map((tile) => PuzzleTile(
+                          tile: tile,
+                          image: Image.asset('assets/images/custom/1blue.png')))
+                      .toList()),
+              AnimatedPositioned(
+                  left: size.width / 100,
+                  right: size.width / 100,
+                  top: board.puzzleState.puzzleStatus == PuzzleStatus.complete
+                      ? (size.height / 80)
+                      : -500,
+                  duration: Duration(milliseconds: 1000),
+                  curve: Curves.easeOutCubic,
+                  child: CongratsCard()),
+            ]);
           }),
         ),
         Gap(ResponsiveLayout.isMobile(context)

@@ -25,7 +25,9 @@ class ShuffleButton extends StatelessWidget {
       textColor: puzzleState.darkMode
           ? isRunning ||
                   (Provider.of<TimerStateManager>(context, listen: false)
-                      .gettingReady)
+                      .gettingReady) ||
+                  (Provider.of<TimerStateManager>(context, listen: false)
+                      .succesful)
               ? PuzzleColors.white.withOpacity(0.5)
               : PuzzleColors.white
           : PuzzleColors.white,
@@ -41,7 +43,7 @@ class ShuffleButton extends StatelessWidget {
               ? PuzzleColors.blue50.withOpacity(0.5)
               : PuzzleColors.blue50,
       onPressed: () {
-        isRunning ? null : puzzleBoardState.resetPuzzle(true);
+        isRunning ? null : puzzleBoardState.resetPuzzle(true, true);
       },
       child: const Text('Shuffle'),
     );

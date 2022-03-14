@@ -10,6 +10,8 @@ class TimerStateManager extends ChangeNotifier {
   bool? _shufflePuzzle = true;
   bool? _gettingReady = false;
   int? secondsElapsed = 0;
+  bool? _succesful = false;
+
   final Stopwatch _stopwatch = Stopwatch();
   late final Ticker? _ticker;
 
@@ -19,6 +21,7 @@ class TimerStateManager extends ChangeNotifier {
   bool get gettingReady => _gettingReady!;
   bool get shufflePuzzle => _shufflePuzzle!;
   Stopwatch get stopwatch => _stopwatch;
+  bool get succesful => _succesful!;
 
   set timerStarted(bool timerStarted) {
     _timerStarted = timerStarted;
@@ -56,8 +59,10 @@ class TimerStateManager extends ChangeNotifier {
       print('starting');
 
       _gettingReady = _stopwatch.isRunning;
+      _stopwatch.reset();
 
       _stopwatch.start();
+      _succesful = false;
       timerStarted = _stopwatch.isRunning;
       Timer.periodic(const Duration(seconds: 1), (timer) {
         print('timer ticking ${timer.tick}');
@@ -65,6 +70,7 @@ class TimerStateManager extends ChangeNotifier {
           notifyListeners();
         } else {
           timer.cancel();
+          notifyListeners();
         }
       });
 
@@ -83,31 +89,18 @@ class TimerStateManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getReady() {
-    gettingReady = true;
-    bool? done;
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      print('tick ${timer.tick}, ${timer.tick == 3}');
-
-      timer.tick == 4 || timer.tick > 5
-          ? () {
-              gettingReady = false;
-              timer.cancel();
-
-              notifyListeners();
-            }()
-          : () {
-              null;
-            }();
-    });
-
-    notifyListeners();
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     _tickerSubscription!.cancel();
+  }
+
+  void puzzleCompleted() {
+    timerStarted = !_stopwatch.isRunning;
+    _succesful = true;
+
+    _stopwatch.stop();
+    notifyListeners();
   }
 }

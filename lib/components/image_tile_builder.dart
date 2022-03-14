@@ -4,11 +4,36 @@ import 'package:provider/provider.dart';
 
 import '../models/model.dart';
 
-class ImageTileBuider extends StatelessWidget {
+class ImageTileBuider extends StatefulWidget {
   const ImageTileBuider({Key? key, required this.tile, required this.image})
       : super(key: key);
   final Tile tile;
   final Image image;
+
+  @override
+  State<ImageTileBuider> createState() => _ImageTileBuiderState();
+}
+
+class _ImageTileBuiderState extends State<ImageTileBuider>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    print("init state called");
+
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+
+    _scale = Tween<double>(begin: 1, end: 0.94).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0, 1, curve: Curves.easeInOut),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +41,11 @@ class ImageTileBuider extends StatelessWidget {
     final timerState = Provider.of<TimerStateManager>(context, listen: false);
     return AnimatedAlign(
       alignment: FractionalOffset(
-        (tile.currentPosition.x - 1) / (3),
-        (tile.currentPosition.y - 1) / (3),
+        (widget.tile.currentPosition.x - 1) / (3),
+        (widget.tile.currentPosition.y - 1) / (3),
       ),
       duration: const Duration(milliseconds: 600),
-      curve: Curves.easeInOut,
+      curve: Curves.bounceIn,
       child: ResponsiveLayout(
         mobile: (context, child) => SizedBox.square(
           dimension: 80,
@@ -34,16 +59,30 @@ class ImageTileBuider extends StatelessWidget {
           dimension: 115,
           child: child,
         ),
-        child: () => ClipRRect(
+        child: () =>
+            // AnimatedContainer(
+            //     curve: Curves.fastOutSlowIn,
+            //     duration: const Duration(milliseconds: 500),
+            //     decoration: const BoxDecoration(
+            //       // borderRadius: BorderRadius.circular(20),
+            //       // image: DecorationImage(
+            //       //   image: AssetImage(imageAsset),
+            //       //   fit: BoxFit.fill,
+            //       // ),
+            //       shape: BoxShape.rectangle,
+            //     ),
+            //     child: image),
+
+            ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: IconButton(
               padding: EdgeInsets.zero,
               onPressed: timerState.timerStarted
                   ? () {
-                      state.onTileTapped(tile);
+                      state.onTileTapped(widget.tile);
                     }
                   : null,
-              icon: image),
+              icon: widget.image),
         ),
       ),
     );

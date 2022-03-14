@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -14,15 +15,17 @@ class PuzzleBoardStateManager extends ChangeNotifier {
   final List<Image> _imageList = <Image>[];
   final int? _size = 4;
   final Random? random = Random();
-  final defaultAsset = 'assets/images/blue.png';
-  List<String> imageAssets = [
-    'assets/images/blue.png',
-    'assets/images/yellow.png',
-    'assets/images/green.png',
-    'assets/images/blue.png',
-    'assets/images/yellow.png',
-    'assets/images/green.png'
-  ];
+  List<Uint8List> imageAssets = <Uint8List>[];
+  // [
+  //   'assets/images/blue.png',
+  //   'assets/images/yellow.png',
+  //   'assets/images/green.png',
+  //   'assets/images/blue.png',
+  //   'assets/images/yellow.png',
+  //   'assets/images/green.png',
+  //   'assets/images/flutter dash.png',
+  //   'assets/images/dash.jpg',
+  // ];
   int? _currentAssetInex = 0;
 
   PuzzleState get puzzleState => _puzzleState;
@@ -31,9 +34,9 @@ class PuzzleBoardStateManager extends ChangeNotifier {
   int get currentAssetInex => _currentAssetInex!;
   set currentAssetInex(int currentAssetInex) {
     _currentAssetInex = currentAssetInex;
-    imageList.clear();
+    _imageList.clear();
     print('index $_currentAssetInex');
-    initCustomBoard(currentAssetInex);
+    splitImage(currentAssetInex);
 
     notifyListeners();
   }
@@ -42,22 +45,23 @@ class PuzzleBoardStateManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initilizePuzzle() async {
+  void initilizePuzzle() {
     final timerSate = TimerStateManager();
     final puzzle = _generatePuzzle(_size!, shuffle: timerSate.shufflePuzzle);
     _puzzleState = PuzzleState(
-      puzzle: puzzle.sort(),
+      puzzle: puzzle,
       numberOfCorrectTiles: puzzle.getNumberOfCorrectTiles(),
     );
+    // await initImages();
 
     // await initCustomBoard(currentAssetInex);
   }
 
-  void resetPuzzle(bool rebuild) {
+  void resetPuzzle(bool rebuild, bool sort) {
     // final timerSate = TimerStateManager();
     final puzzle = _generatePuzzle(_size!);
     _puzzleState = PuzzleState(
-      puzzle: puzzle.sort(),
+      puzzle: sort ? puzzle.sort() : puzzle,
       numberOfCorrectTiles: puzzle.getNumberOfCorrectTiles(),
     );
     rebuild ? notifyListeners() : null;
@@ -203,17 +207,18 @@ class PuzzleBoardStateManager extends ChangeNotifier {
 
               timer.cancel();
             }()
-          : resetPuzzle(true);
+          : resetPuzzle(true, true);
     });
   }
 
-  void splitImage(List<int> input) {
+  Future<void> splitImage(int index) async {
     // convert image to image from image package
-    imglib.Image image = imglib.decodeImage(input)!;
+    imglib.Image image = imglib.decodeImage(imageAssets[index])!;
 
     int x = 0, y = 0;
     int width = (image.width / 4).round();
     int height = (image.height / 4).round();
+    image = imglib.copyCrop(image, 8, 8, image.width, image.height);
 
     // split image to parts
     List<imglib.Image> parts = <imglib.Image>[];
@@ -232,8 +237,9 @@ class PuzzleBoardStateManager extends ChangeNotifier {
         Uint8List.fromList(
           imglib.encodeJpg(img),
         ),
-        scale: 0.3,
-        fit: BoxFit.contain,
+        fit: BoxFit.fill,
+        width: 120,
+        height: 120,
         frameBuilder: (BuildContext context, Widget child, int? frame,
             bool wasSynchronouslyLoaded) {
           return AnimatedOpacity(
@@ -248,13 +254,43 @@ class PuzzleBoardStateManager extends ChangeNotifier {
   }
 
   Future<void> initCustomBoard(int index) async {
-    var data = await rootBundle.load(imageAssets[index]);
-    print('data image index $index');
-    splitImage(data.buffer.asUint8List());
+    splitImage(index);
     // notifyListeners();
   }
 
   void runinit() async {
     await initCustomBoard(currentAssetInex);
+  }
+
+  Future<void> initImages() async {
+    final manifestContent = await rootBundle.loadString('AssetManifest.json');
+
+    final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+
+    var assets = manifestMap.keys
+        .where((String key) => key.startsWith('assets/images/custom'))
+        .toList();
+    print("list ${assets}");
+
+    for (var element in assets) {
+      var data = await rootBundle.load(element);
+      imageAssets.add(data.buffer.asUint8List());
+    }
+  }
+
+  void addImage(Uint8List imageData) async {
+    imageAssets.add(imageData);
+    currentAssetInex = imageAssets.indexOf(imageData);
+    _imageList.clear();
+    notifyListeners();
+  }
+
+  void deleteImage(int index) {
+    print('index to delete $index');
+    imageAssets.removeAt(index);
+    if (currentAssetInex > index) {
+      currentAssetInex -= 1;
+    }
+    notifyListeners();
   }
 }

@@ -67,28 +67,32 @@ class PuzzleMenuItem extends StatelessWidget {
 
         return Padding(
           padding: EdgeInsets.only(left: leftPadding),
-          child: TextButton(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-            ).copyWith(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-            onPressed: () {
-              isCurrentMenu
-                  ? null
-                  : () {
-                      timerState.timerStarted ? timerState.stopTimer() : null;
-                      Provider.of<PuzzleBoardStateManager>(context,
-                              listen: false)
-                          .resetPuzzle(false);
+          child: Tooltip(
+            message:
+                isCurrentMenu ? '' : 'Switching menu will reset the puzzle',
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+              ).copyWith(
+                overlayColor: MaterialStateProperty.all(Colors.transparent),
+              ),
+              onPressed: () {
+                isCurrentMenu
+                    ? null
+                    : () {
+                        timerState.timerStarted ? timerState.stopTimer() : null;
+                        Provider.of<PuzzleBoardStateManager>(context,
+                                listen: false)
+                            .resetPuzzle(false, false);
 
-                      puzzleState.currentMenuIndex = menuIndex;
-                    }();
-            },
-            child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 600),
-              style: textStyle,
-              child: Text(menuItem!),
+                        puzzleState.currentMenuIndex = menuIndex;
+                      }();
+              },
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 600),
+                style: textStyle,
+                child: Text(menuItem!),
+              ),
             ),
           ),
         );

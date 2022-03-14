@@ -22,7 +22,12 @@ class PuzzleControlButton extends StatelessWidget {
         mainAxisAlignment: ResponsiveLayout.isDesktop(context)
             ? MainAxisAlignment.start
             : MainAxisAlignment.center,
-        children: [StartStopButton(), const Gap(10), ShuffleButton()],
+        children: [
+          StartStopButton(),
+          const Gap(10),
+          ShuffleButton(),
+          
+        ],
       );
     });
   }

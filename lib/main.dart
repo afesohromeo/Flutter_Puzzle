@@ -22,11 +22,12 @@ class _PuzzleAppState extends State<PuzzleApp> {
   final _appStateManager = PuzzleStateManager();
   final _timerStateManager = TimerStateManager();
   final _puzzleBoard = PuzzleBoardStateManager();
-  
+
   @override
   void initState() {
     super.initState();
     _puzzleBoard.initilizePuzzle();
+    _puzzleBoard.initImages();
     // _puzzleBoard.initCustomBoard(defaultAsset);
   }
 
