@@ -80,7 +80,7 @@ class PuzzleMenuItem extends StatelessWidget {
                 isCurrentMenu
                     ? null
                     : () {
-                        timerState.timerStarted ? timerState.stopTimer() : null;
+                        timerState.stopTimer();
                         Provider.of<PuzzleBoardStateManager>(context,
                                 listen: false)
                             .resetPuzzle(false, false);

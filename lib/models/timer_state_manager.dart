@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:js';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/models/model.dart';
@@ -46,17 +46,17 @@ class TimerStateManager extends ChangeNotifier {
   }
 
   void handleStartStop() {
-    print('handleing start stop');
+    log('handling start stop');
 
     if (_stopwatch.isRunning) {
-      print('stopinng');
+      log('stopinng');
       timerStarted = !_stopwatch.isRunning;
       _stopwatch.stop();
       _stopwatch.reset();
 
       notifyListeners();
     } else {
-      print('starting');
+      log('starting');
 
       _gettingReady = _stopwatch.isRunning;
       _stopwatch.reset();
@@ -65,7 +65,7 @@ class TimerStateManager extends ChangeNotifier {
       _succesful = false;
       timerStarted = _stopwatch.isRunning;
       Timer.periodic(const Duration(seconds: 1), (timer) {
-        print('timer ticking ${timer.tick}');
+        log('timer ticking ${timer.tick}');
         if (_stopwatch.isRunning) {
           notifyListeners();
         } else {
@@ -79,28 +79,25 @@ class TimerStateManager extends ChangeNotifier {
   }
 
   void stopTimer() {
-    timerStarted = !_stopwatch.isRunning;
+    _timerStarted = false;
 
     _stopwatch.stop();
     _stopwatch.reset();
+  }
+
+  void reset() {
+    _stopwatch.reset();
+    notifyListeners();
   }
 
   void rebuild() {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _tickerSubscription!.cancel();
-  }
-
   void puzzleCompleted() {
-    timerStarted = !_stopwatch.isRunning;
+    _timerStarted = false;
     _succesful = true;
 
     _stopwatch.stop();
-    notifyListeners();
   }
 }

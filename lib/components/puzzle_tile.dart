@@ -13,11 +13,10 @@ class PuzzleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('puzzle tiles building ${tile.value}');
     final state = Provider.of<PuzzleStateManager>(context, listen: false);
 
     return tile.isWhitespace
-        ? WhiteSpaceTileBuilder()
+        ?const  WhiteSpaceTileBuilder()
         : state.currentMenuIndex == 0
             ? NumberTileBuilder(
                 tile: tile,

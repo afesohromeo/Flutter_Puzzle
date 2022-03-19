@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/models/model.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +10,6 @@ import 'layout/responsive_layout.dart';
 import 'screens/screens.dart';
 
 void main() {
-  print('heyyyy');
   runApp(PuzzleApp());
 }
 
@@ -27,7 +29,8 @@ class _PuzzleAppState extends State<PuzzleApp> {
   void initState() {
     super.initState();
     _puzzleBoard.initilizePuzzle();
-    _puzzleBoard.initImages();
+    // Isolate.spawn(_puzzleBoard.initImages, "");
+    _puzzleBoard.initImages("");
     // _puzzleBoard.initCustomBoard(defaultAsset);
   }
 
@@ -49,7 +52,8 @@ class _PuzzleAppState extends State<PuzzleApp> {
           builder: (context, appStateManager, child) {
             ThemeData theme;
             if (appStateManager.darkMode) {
-              print("Dark mode");
+              log('Dark mode');   
+
               theme = PuzzleTheme.dark();
             } else {
               theme = PuzzleTheme.light();

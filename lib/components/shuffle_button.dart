@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/components/components.dart';
+import 'package:flutter_puzzle/models/puzzle_state.dart';
 import 'package:flutter_puzzle/themes/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +18,9 @@ class ShuffleButton extends StatelessWidget {
     final puzzleBoardState =
         Provider.of<PuzzleBoardStateManager>(context, listen: false);
     final isRunning = Provider.of<TimerStateManager>(context, listen: false)
-        .stopwatch
-        .isRunning;
+            .stopwatch
+            .isRunning ||
+        puzzleBoardState.puzzleState.puzzleStatus == PuzzleStatus.complete;
 
     return PuzzleButton(
       isDisabled: isRunning,

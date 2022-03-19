@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:math';
+
 
 import 'package:flutter/material.dart';
-import 'package:flutter_puzzle/layout/responsive_layout.dart';
-import 'package:flutter_puzzle/models/model.dart';
-import 'package:flutter_puzzle/models/puzzle_state.dart';
+import 'dart:developer';
 
 class PuzzleStateManager extends ChangeNotifier {
   bool? _darkMode = false;
@@ -14,7 +11,7 @@ class PuzzleStateManager extends ChangeNotifier {
   bool get darkMode => _darkMode!;
 
   set darkMode(bool darkMode) {
-    print('mode $darkMode');
+    log('mode $darkMode');
     _darkMode = darkMode;
 
     notifyListeners();

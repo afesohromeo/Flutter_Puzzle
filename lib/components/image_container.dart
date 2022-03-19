@@ -16,6 +16,7 @@ class ImageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     final puzzleBoardState =
         Provider.of<PuzzleBoardStateManager>(context, listen: false);
     final puzzleState = Provider.of<PuzzleStateManager>(context, listen: false);
@@ -78,7 +79,7 @@ class ImageContainer extends StatelessWidget {
               child: AnimatedContainer(
                 padding: const EdgeInsets.all(3),
                 curve: Curves.fastOutSlowIn,
-                duration: const Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 1000),
                 height: isCurrentImageIndex ? activeSize : inActiveSize,
                 width: isCurrentImageIndex ? activeSize : inActiveSize,
                 decoration: BoxDecoration(

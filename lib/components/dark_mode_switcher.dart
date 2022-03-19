@@ -10,8 +10,7 @@ class DarkModeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'dd ${Provider.of<PuzzleStateManager>(context, listen: false).darkMode}');
+   
 
     return Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,7 +19,6 @@ class DarkModeSwitcher extends StatelessWidget {
           // activeTrackColor: PuzzleColors.white,
           value: darkMode!,
           onChanged: (value) {
-            print('value $value');
             Provider.of<PuzzleStateManager>(context, listen: false).darkMode =
                 value;
           },

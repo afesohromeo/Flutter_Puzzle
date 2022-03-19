@@ -20,7 +20,6 @@ class NumberTileBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('Building tile');
     final state = Provider.of<PuzzleBoardStateManager>(context, listen: false);
     final timerState = Provider.of<TimerStateManager>(context, listen: false);
     final buttonStyle = !darkMode
@@ -32,7 +31,6 @@ class NumberTileBuilder extends StatelessWidget {
     final bgColor = !darkMode
         ? PuzzleColors.bluePrimary.withOpacity(0.9)
         : PuzzleColors.green50;
-    // print("wansass ${timerState.timerStarted}");
 
     return AnimatedContainer(
         // alignment: FractionalOffset(

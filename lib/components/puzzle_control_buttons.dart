@@ -13,8 +13,6 @@ class PuzzleControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('puzzle control bbut');
-    final timerState = Provider.of<TimerStateManager>(context, listen: false);
 
     return Consumer<TimerStateManager>(
         builder: (context, timerStateManager, child) {

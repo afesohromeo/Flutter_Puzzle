@@ -19,9 +19,11 @@ class StartStopButton extends StatelessWidget {
     final timerState = Provider.of<TimerStateManager>(context, listen: false);
     final buttonText = timerState.gettingReady
         ? 'Get Ready'
-        : !timerState.timerStarted
-            ? 'Start' 
-            : puzzleBoardState.puzzleState.puzzleStatus == PuzzleStatus.complete ? 'Restart' : 'Reset';
+        : puzzleBoardState.puzzleState.puzzleStatus == PuzzleStatus.complete
+            ? 'Restart'
+            : !timerState.timerStarted
+                ? 'Start'
+                : 'Reset';
     return PuzzleButton(
       isDisabled: false,
       textColor: PuzzleColors.white,
@@ -33,17 +35,22 @@ class StartStopButton extends StatelessWidget {
                 timerState.handleStartStop();
                 puzzleBoardState.resetPuzzle(true, false);
               }()
-            : () async {
+            : () {
                 timerState.gettingReady = true;
 
-                timerState.succesful ?  Timer(
-      const Duration(milliseconds: 2000),
-      ()async {
-         await puzzleBoardState.getReady(timerState);
-       
-      },
-    ):
-                await puzzleBoardState.getReady(timerState);
+                timerState.succesful
+                    ? () {
+                        puzzleBoardState.reStartPuzzle();
+
+                        Timer(
+                          const Duration(milliseconds: 1000),
+                          () {
+                            timerState.reset();
+                            puzzleBoardState.getReady(timerState);
+                          },
+                        );
+                      }()
+                    : puzzleBoardState.getReady(timerState);
               }();
 
         // puzzleState.rebuild();

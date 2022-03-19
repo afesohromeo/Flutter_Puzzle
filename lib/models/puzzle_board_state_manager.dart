@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_puzzle/models/model.dart';
 import 'package:flutter_puzzle/models/puzzle_state.dart';
 import 'package:image/image.dart' as imglib;
+import 'dart:developer' as lg;
 
 class PuzzleBoardStateManager extends ChangeNotifier {
   PuzzleState _puzzleState = const PuzzleState();
@@ -16,15 +18,15 @@ class PuzzleBoardStateManager extends ChangeNotifier {
   final int? _size = 4;
   final Random? random = Random();
   List<Uint8List> imageAssets = <Uint8List>[];
-  // [
-  //   'assets/images/blue.png',
-  //   'assets/images/yellow.png',
-  //   'assets/images/green.png',
-  //   'assets/images/blue.png',
-  //   'assets/images/yellow.png',
-  //   'assets/images/green.png',
-  //   'assets/images/flutter dash.png',
-  //   'assets/images/dash.jpg',
+  // List<String> imageAssetss = [
+  //   'assets/images/custom/1blue.png',
+  //   'assets/images/custom/3yellow.png',
+  //   'assets/images/custom/2green.png',
+  //   'assets/images/custom/1blue.png',
+  //   'assets/images/custom/3yellow.png',
+  //   'assets/images/custom/2green.png',
+  //   'assets/images/custom/4flutter_dash.png',
+  //   'assets/images/custom/dash.jpg',
   // ];
   int? _currentAssetInex = 0;
 
@@ -35,8 +37,8 @@ class PuzzleBoardStateManager extends ChangeNotifier {
   set currentAssetInex(int currentAssetInex) {
     _currentAssetInex = currentAssetInex;
     _imageList.clear();
-    print('index $_currentAssetInex');
-    splitImage(currentAssetInex);
+    lg.log('index $_currentAssetInex');
+    // splitImage(currentAssetInex);
 
     notifyListeners();
   }
@@ -141,19 +143,18 @@ class PuzzleBoardStateManager extends ChangeNotifier {
   }
 
   void onTileTapped(Tile tile) {
-    print('yes tapped ${tile.value}, ${tile.currentPosition}');
+    lg.log('yes tapped ${tile.value}, ${tile.currentPosition}');
     for (Tile t in _puzzleState.puzzle.tiles) {
-      print('update ## ${t.value}');
     }
     if (_puzzleState.puzzleStatus == PuzzleStatus.incomplete) {
-      print('incomplete ${_puzzleState.puzzleStatus}');
+      lg.log('incomplete ${_puzzleState.puzzleStatus}');
       if (_puzzleState.puzzle.isTileMovable(tile)) {
-        print('is movable tile ${_puzzleState.puzzle.isTileMovable(tile)}');
+        lg.log('is movable tile ${_puzzleState.puzzle.isTileMovable(tile)}');
         final mutablePuzzle = Puzzle(tiles: [..._puzzleState.puzzle.tiles]);
         final puzzle = mutablePuzzle.moveTiles(tile, []);
 
         if (puzzle.isComplete()) {
-          print('is complete ${puzzle.isComplete()}');
+          lg.log('is complete ${puzzle.isComplete()}');
           _puzzleState = _puzzleState.copyWith(
               puzzle: puzzle.sort(),
               puzzleStatus: PuzzleStatus.complete,
@@ -163,7 +164,7 @@ class PuzzleBoardStateManager extends ChangeNotifier {
               lastTappedTile: tile);
           notifyListeners();
         } else {
-          print('is not complete');
+          lg.log('is not complete');
           _puzzleState = _puzzleState.copyWith(
             puzzle: puzzle.sort(),
             tileMovementStatus: TileMovementStatus.moved,
@@ -171,23 +172,18 @@ class PuzzleBoardStateManager extends ChangeNotifier {
             numberOfMoves: _puzzleState.numberOfMoves + 1,
             lastTappedTile: tile,
           );
-          print(puzzle.sort() == null);
-          for (Tile t in puzzle.sort().tiles) {
-            print('update ${t.value}');
-          }
-          for (Tile t in _puzzleState.puzzle.tiles) {
-            print('update # ${t.value}');
-          }
+         
+          
           notifyListeners();
         }
       } else {
-        print('is not movable');
+        lg.log('is not movable');
         _puzzleState.copyWith(
             tileMovementStatus: TileMovementStatus.cannotBeMoved);
         // notifyListeners();
       }
     } else {
-      print('is incomplete');
+      lg.log('is incomplete');
       _puzzleState.copyWith(
           tileMovementStatus: TileMovementStatus.cannotBeMoved);
       // notifyListeners();
@@ -196,11 +192,9 @@ class PuzzleBoardStateManager extends ChangeNotifier {
 
   Future<void> getReady(TimerStateManager timerState) async {
     Timer.periodic(const Duration(milliseconds: 1000), (Timer timer) {
-      print('tick ${timer.tick}, ${timer.tick == 3}');
 
       timer.tick >= 4
           ? () {
-              // timerState.gettingReady = false;
 
               timerState.handleStartStop();
               notifyListeners();
@@ -211,58 +205,67 @@ class PuzzleBoardStateManager extends ChangeNotifier {
     });
   }
 
-  Future<void> splitImage(int index) async {
-    // convert image to image from image package
-    imglib.Image image = imglib.decodeImage(imageAssets[index])!;
+  Future<void> splitImage(List<int> data) async {
+    await Future.delayed(const Duration(milliseconds: 800));
 
-    int x = 0, y = 0;
-    int width = (image.width / 4).round();
-    int height = (image.height / 4).round();
-    image = imglib.copyCrop(image, 8, 8, image.width, image.height);
+    void spliting(String m) async {
+      imglib.Image image = imglib.decodeImage(data)!;
+      int x = 0, y = 0;
+      int width = (image.width / 4).round();
+      int height = (image.height / 4).round();
+      image = imglib.copyCrop(image, 8, 8, image.width, image.height);
 
-    // split image to parts
-    List<imglib.Image> parts = <imglib.Image>[];
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++) {
-        parts.add(imglib.copyCrop(image, x, y, width, height));
-        x += width;
+      // split image to parts
+      List<imglib.Image> parts = <imglib.Image>[];
+      for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+          parts.add(imglib.copyCrop(image, x, y, width, height));
+          x += width;
+        }
+        x = 0;
+        y += height;
       }
-      x = 0;
-      y += height;
+
+      // convert image from image package to Image Widget to display
+      for (var img in parts) {
+        _imageList.add(Image.memory(
+          Uint8List.fromList(
+            imglib.encodeJpg(img),
+          ),
+          fit: BoxFit.fill,
+          width: 120,
+          height: 120,
+          frameBuilder: (BuildContext context, Widget child, int? frame,
+              bool wasSynchronouslyLoaded) {
+            return AnimatedOpacity(
+              opacity: frame == null ? 0 : 1,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeIn,
+              child: child,
+            );
+          },
+        ));
+      }
     }
 
-    // convert image from image package to Image Widget to display
-    for (var img in parts) {
-      _imageList.add(Image.memory(
-        Uint8List.fromList(
-          imglib.encodeJpg(img),
-        ),
-        fit: BoxFit.fill,
-        width: 120,
-        height: 120,
-        frameBuilder: (BuildContext context, Widget child, int? frame,
-            bool wasSynchronouslyLoaded) {
-          return AnimatedOpacity(
-            opacity: frame == null ? 0 : 1,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeIn,
-            child: child,
-          );
-        },
-      ));
+    await compute(spliting, "");
+  }
+
+  Future initCustomBoard(int index) async {
+    // var data = await rootBundle.load(imageAssetss[index]);
+
+    if (imageAssets.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 2000), () async {
+        await splitImage(imageAssets[index]);
+        notifyListeners();
+// notifyListeners();
+      });
+    } else {
+      await splitImage(imageAssets[index]);
     }
   }
 
-  Future<void> initCustomBoard(int index) async {
-    splitImage(index);
-    // notifyListeners();
-  }
-
-  void runinit() async {
-    await initCustomBoard(currentAssetInex);
-  }
-
-  Future<void> initImages() async {
+  Future<void> initImages(String m) async {
     final manifestContent = await rootBundle.loadString('AssetManifest.json');
 
     final Map<String, dynamic> manifestMap = json.decode(manifestContent);
@@ -270,7 +273,6 @@ class PuzzleBoardStateManager extends ChangeNotifier {
     var assets = manifestMap.keys
         .where((String key) => key.startsWith('assets/images/custom'))
         .toList();
-    print("list ${assets}");
 
     for (var element in assets) {
       var data = await rootBundle.load(element);
@@ -278,19 +280,49 @@ class PuzzleBoardStateManager extends ChangeNotifier {
     }
   }
 
-  void addImage(Uint8List imageData) async {
+  Future<void> addImage(Uint8List imageData) async {
     imageAssets.add(imageData);
-    currentAssetInex = imageAssets.indexOf(imageData);
+    _currentAssetInex = imageAssets.length - 1;
     _imageList.clear();
+    // splitImage(imageData);
     notifyListeners();
   }
 
   void deleteImage(int index) {
-    print('index to delete $index');
     imageAssets.removeAt(index);
     if (currentAssetInex > index) {
       currentAssetInex -= 1;
     }
     notifyListeners();
+  }
+
+  // void fakeTap(
+  //   Tile tile,
+  // ) {
+  //   _puzzleState = _puzzleState.copyWith(
+  //       puzzleStatus: PuzzleStatus.complete,
+  //       tileMovementStatus: TileMovementStatus.moved,
+  //       numberOfMoves: _puzzleState.numberOfMoves + 1,
+  //       lastTappedTile: tile);
+  //   // timerState.puzzleCompleted();
+  //   notifyListeners();
+  // }
+
+  void reStartPuzzle(
+  ) {
+    _puzzleState = _puzzleState.copyWith(
+        puzzleStatus: PuzzleStatus.incomplete,
+        tileMovementStatus: TileMovementStatus.nothingTapped,
+        numberOfMoves: 0,
+);
+    notifyListeners();
+  }
+
+  Future<void> runCompute(int index) async {
+    Future.delayed(const Duration(seconds: 2), () async {
+      await compute(splitImage, imageAssets[index]);
+      // await Isolate.spawn(initCustomBoard, index);
+      notifyListeners();
+    });
   }
 }

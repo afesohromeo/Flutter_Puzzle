@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/layout/responsive_layout.dart';
 import 'package:flutter_puzzle/models/model.dart';
@@ -24,7 +22,6 @@ class PuzzleScreen extends StatefulWidget {
 class _PuzzleScreenState extends State<PuzzleScreen> {
   @override
   Widget build(BuildContext context) {
-    print("scafold");
     return Scaffold(
         body: AnimatedContainer(
       duration: const Duration(milliseconds: 600),
@@ -92,7 +89,6 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   Widget buildBody() {
     final index = Provider.of<PuzzleStateManager>(context, listen: false)
         .currentMenuIndex;
-    print('current menu index $index');
     return LazyLoadIndexedStack(
       index: index,
       children: [
@@ -103,113 +99,5 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   }
 }
 
-// class Header extends StatelessWidget {
-//   const Header({Key? key}) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     print('header');
-//     final state = PuzzleStateManager();
-//     return Container(
-//       constraints: const BoxConstraints(maxHeight: 100),
-//       child: ResponsiveLayout(
-//         mobile: (context, child) => Column(
-//           children: [
-//             Stack(
-//               children: [
-//                 Align(
-//                   child: PuzzleLogo(
-//                     darkMode: state.darkMode,
-//                   ),
-//                 ),
-//                 const Align(
-//                   alignment: Alignment.centerRight,
-//                   child: Padding(
-//                     padding: EdgeInsets.only(right: 35),
-//                     child: DarkModeSwitcher(
-//                         // darkMode: state.darkMode,
-//                         ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//         tablet: (context, child) => Padding(
-//           padding: const EdgeInsets.symmetric(
-//             horizontal: 50,
-//           ),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               PuzzleLogo(
-//                 darkMode: state.darkMode,
-//               ),
-//               const PuzzleMenu(),
-//             ],
-//           ),
-//         ),
-//         desktop: (context, child) => Padding(
-//           padding: const EdgeInsets.symmetric(
-//             horizontal: 50,
-//           ),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               PuzzleLogo(
-//                 darkMode: state.darkMode,
-//               ),
-//               const PuzzleMenu(),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
-class Body extends StatelessWidget {
-  const Body({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-// class PuzzleMenu extends StatelessWidget {
-//   const PuzzleMenu({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final state = PuzzleStateManager();
-
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         ...List.generate(
-//           2,
-//           (index) => PuzzleMenuItem(
-//             menuIndex: index,
-//             menuItem: menuItems[index],
-//           ),
-//         ),
-//         ResponsiveLayout(
-//           mobile: (_, child) => const SizedBox(),
-//           tablet: (_, child) => child!,
-//           desktop: (_, child) => child!,
-//           child: () {
-//             return Row(
-//               children: [
-//                 const Gap(40),
-//                 DarkModeSwitcher(
-//                   darkMode: state.darkMode,
-//                 ),
-//               ],
-//             );
-//           },
-//         ),
-//       ],
-//     );
-//   }
-// }

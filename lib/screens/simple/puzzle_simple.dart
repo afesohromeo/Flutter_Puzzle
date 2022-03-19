@@ -61,8 +61,6 @@ class BoardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    print('my board');
-
     return Column(
       children: [
         Gap(ResponsiveLayout.isMobile(context)
@@ -93,8 +91,6 @@ class BoardSection extends StatelessWidget {
           ),
           child: () => Consumer<PuzzleBoardStateManager>(
               builder: (context, board, child) {
-            print('puzzle status ${board.puzzleState.puzzleStatus}');
-            print('puzzle size $size');
             if (board.puzzleState.puzzleStatus == PuzzleStatus.complete) {
               Provider.of<TimerStateManager>(context, listen: false)
                   .puzzleCompleted();

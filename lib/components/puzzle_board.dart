@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class PuzzleBoard extends StatelessWidget {
@@ -11,7 +13,7 @@ class PuzzleBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('my puzzle grid board ');
+    log('my puzzle grid board ');
 
     return
        

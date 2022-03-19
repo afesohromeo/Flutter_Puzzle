@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_puzzle/components/components.dart';
@@ -90,31 +92,21 @@ class BoardSection extends StatelessWidget {
                 ),
             child: () => Consumer<PuzzleBoardStateManager>(
                     builder: (context, board, child) {
+                  if (board.puzzleState.puzzleStatus == PuzzleStatus.complete) {
+                    Provider.of<TimerStateManager>(context, listen: false)
+                        .puzzleCompleted();
+                  }
                   return Stack(
                     children: [
-                      AnimatedPositioned(
-                          left: size.width / 100,
-                          right: size.width / 100,
-                          top: board.puzzleState.puzzleStatus ==
-                                  PuzzleStatus.complete
-                              ? (size.height / 80)
-                              : -500,
-                          duration: Duration(milliseconds: 1000),
-                          curve: Curves.easeOutCubic,
-                          child: CongratsCard()),
                       if (board.imageList.isEmpty) ...[
                         FutureBuilder(
-                            future: Provider.of<PuzzleBoardStateManager>(
-                                    context,
-                                    listen: false)
-                                .splitImage(
-                                    Provider.of<PuzzleBoardStateManager>(
-                                            context,
-                                            listen: false)
-                                        .currentAssetInex),
+                            future:
+                                board.initCustomBoard(board.currentAssetInex),
                             builder: (context, AsyncSnapshot<void> snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
+                                log('board size ${board.imageList.length}');
+
                                 return PuzzleBoard(
                                   size: 4,
                                   tiles: board.puzzleState.puzzle.tiles
@@ -126,7 +118,7 @@ class BoardSection extends StatelessWidget {
                                       .toList(),
                                 );
                               } else {
-                                print('spinning');
+                                log('spinning');
                                 return Center(
                                   child: CircularProgressIndicator(),
                                 );
@@ -142,7 +134,17 @@ class BoardSection extends StatelessWidget {
                                   ))
                               .toList(),
                         )
-                      ]
+                      ],
+                      AnimatedPositioned(
+                          left: size.width / 100,
+                          right: size.width / 100,
+                          top: board.puzzleState.puzzleStatus ==
+                                  PuzzleStatus.complete
+                              ? (size.height / 80)
+                              : -500,
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeOutCubic,
+                          child: CongratsCard()),
                     ],
                   );
                 })),
@@ -195,24 +197,24 @@ class EndSection extends StatelessWidget {
                   tablet: (_, child) => child!,
                   desktop: (_, __) => SingleChildScrollView(
                         padding: EdgeInsets.only(top: 75, right: 15),
-                        child: Wrap(spacing: 20, runSpacing: 20,
+                        child: Wrap(
+                            spacing: 20,
+                            runSpacing: 20,
                             // alignment: WrapAlignment.end,
                             // runAlignment: WrapAlignment.end,
                             // crossAxisAlignment: WrapCrossAlignment.end,
-                            children: [
-                              ...List.generate(
-                                  board.imageAssets.length,
-                                  (index) => ImageContainer(
-                                        imageAsset: board.imageAssets[index],
-                                        imageIndex: index,
-                                      ))
-                            ]),
+                            children: List.generate(
+                                board.imageAssets.length,
+                                (index) => ImageContainer(
+                                      imageAsset: board.imageAssets[index],
+                                      imageIndex: index,
+                                    ))),
                       ),
                   child: () => SingleChildScrollView(
                         padding: EdgeInsets.only(top: 70, right: 15),
                         scrollDirection: Axis.horizontal,
-                        child: Row(children: [
-                          ...List.generate(
+                        child: Row(
+                          children: List.generate(
                               puzzleBoardState.imageAssets.length,
                               (index) => Row(children: [
                                     ImageContainer(
@@ -224,7 +226,7 @@ class EndSection extends StatelessWidget {
                                       width: 20,
                                     ),
                                   ])),
-                        ]),
+                        ),
                       ));
             }),
             Align(
@@ -233,12 +235,21 @@ class EndSection extends StatelessWidget {
                 backgroundColor: floatingButtonColor,
                 onPressed: () async {
                   var img = await FilePicker.platform.pickFiles(
+                      // onFileLoading: (status) {
+                      //   puzzleBoardState.imageList.clear();
+                      // },
                       type: FileType.custom,
                       allowMultiple: false,
                       allowedExtensions: ['jpg', 'png']);
-                  timerState.timerStarted ? timerState.stopTimer() : null;
 
-                  puzzleBoardState.addImage(img!.files.first.bytes!);
+                  if (img != null) {
+                    log('adding new image');
+                    log(' image size ${img.files.first.size}');
+
+                    timerState.timerStarted ? timerState.stopTimer() : null;
+
+                    await puzzleBoardState.addImage(img.files.first.bytes!);
+                  }
                 },
                 child: Icon(Icons.camera_alt, size: 20),
                 tooltip: 'Upload an Image',

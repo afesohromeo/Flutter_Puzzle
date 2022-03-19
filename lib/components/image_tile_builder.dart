@@ -22,7 +22,6 @@ class _ImageTileBuiderState extends State<ImageTileBuider>
   @override
   void initState() {
     super.initState();
-    print("init state called");
 
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
